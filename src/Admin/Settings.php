@@ -108,6 +108,31 @@ final class Settings implements HasHooks
                                 </label>
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Caption', 'reel'); ?></th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[lightbox_caption]" value="1" <?php checked((bool) $s['lightbox_caption'], true); ?> />
+                                    <?php esc_html_e('Show the image alt text as a caption inside the lightbox.', 'reel'); ?>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Disable zoom on touch', 'reel'); ?></th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[disable_zoom_on_touch]" value="1" <?php checked((bool) $s['disable_zoom_on_touch'], true); ?> />
+                                    <?php esc_html_e('Skip hover zoom on touch devices, where hover is unreliable.', 'reel'); ?>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Open-image label', 'reel'); ?></th>
+                            <td>
+                                <input type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION); ?>[trigger_label]" value="<?php echo esc_attr((string) $s['trigger_label']); ?>" />
+                                <p class="description"><?php esc_html_e('Accessible label for the open-in-lightbox control. Leave empty for the default.', 'reel'); ?></p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -153,8 +178,34 @@ final class Settings implements HasHooks
                                 </label>
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Default title', 'reel'); ?></th>
+                            <td>
+                                <input type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION); ?>[video_title]" value="<?php echo esc_attr((string) $s['video_title']); ?>" />
+                                <p class="description"><?php esc_html_e('Heading used when a product has no per-product video title. Leave empty for the default.', 'reel'); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Intro text', 'reel'); ?></th>
+                            <td>
+                                <textarea class="large-text" rows="2" name="<?php echo esc_attr(self::OPTION); ?>[video_intro]"><?php echo esc_textarea((string) $s['video_intro']); ?></textarea>
+                                <p class="description"><?php esc_html_e('Optional short paragraph shown under the video heading. Leave empty to hide it.', 'reel'); ?></p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
+
+                <h2><?php esc_html_e('Placement', 'reel'); ?></h2>
+                <p class="description">
+                    <?php
+                    $reel_placement = sprintf(
+                        /* translators: %s: the [reel_video] shortcode tag. */
+                        __('Place the featured video anywhere with the %s shortcode, or the "Reel: Featured video" block. Both render the current product\'s video.', 'reel'),
+                        '<code>[reel_video]</code>',
+                    );
+                    echo wp_kses($reel_placement, ['code' => []]);
+                    ?>
+                </p>
 
                 <?php submit_button(); ?>
             </form>
@@ -166,7 +217,7 @@ final class Settings implements HasHooks
      * Sanitises and clamps the submitted settings before save.
      *
      * @param mixed $raw
-     * @return array{enable_zoom:bool,enable_lightbox:bool,zoom_scale:float,show_backdrop_close:bool,enable_video:bool,video_position:string,video_autoplay:bool,video_show_title:bool}
+     * @return array{enable_zoom:bool,enable_lightbox:bool,zoom_scale:float,show_backdrop_close:bool,disable_zoom_on_touch:bool,lightbox_caption:bool,trigger_label:string,enable_video:bool,video_position:string,video_autoplay:bool,video_show_title:bool,video_title:string,video_intro:string}
      */
     public function sanitize(mixed $raw): array
     {
@@ -183,14 +234,19 @@ final class Settings implements HasHooks
         }
 
         return [
-            'enable_zoom'         => ! empty($raw['enable_zoom']),
-            'enable_lightbox'     => ! empty($raw['enable_lightbox']),
-            'zoom_scale'          => $scale,
-            'show_backdrop_close' => ! empty($raw['show_backdrop_close']),
-            'enable_video'        => ! empty($raw['enable_video']),
-            'video_position'      => $position,
-            'video_autoplay'      => ! empty($raw['video_autoplay']),
-            'video_show_title'    => ! empty($raw['video_show_title']),
+            'enable_zoom'           => ! empty($raw['enable_zoom']),
+            'enable_lightbox'       => ! empty($raw['enable_lightbox']),
+            'zoom_scale'            => $scale,
+            'show_backdrop_close'   => ! empty($raw['show_backdrop_close']),
+            'disable_zoom_on_touch' => ! empty($raw['disable_zoom_on_touch']),
+            'lightbox_caption'      => ! empty($raw['lightbox_caption']),
+            'trigger_label'         => isset($raw['trigger_label']) ? sanitize_text_field((string) $raw['trigger_label']) : '',
+            'enable_video'          => ! empty($raw['enable_video']),
+            'video_position'        => $position,
+            'video_autoplay'        => ! empty($raw['video_autoplay']),
+            'video_show_title'      => ! empty($raw['video_show_title']),
+            'video_title'           => isset($raw['video_title']) ? sanitize_text_field((string) $raw['video_title']) : '',
+            'video_intro'           => isset($raw['video_intro']) ? sanitize_textarea_field((string) $raw['video_intro']) : '',
         ];
     }
 

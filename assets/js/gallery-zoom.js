@@ -13,9 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  // Plugin-local extras injected on the same handle (the kit engine localizes
+  // only the core config object). Optional — defaults keep prior behaviour.
+  const extra = window.reelGalleryExtra || {};
+  const isTouch = window.matchMedia ? window.matchMedia('(hover: none)').matches : false;
+  const allowZoom = config.enableZoom && !(extra.disableZoomOnTouch && isTouch);
+
   const lightbox = document.querySelector('[data-reel-gallery-lightbox]');
   const lightboxImage = document.querySelector('[data-reel-gallery-lightbox-image]');
   const closeButton = lightbox ? lightbox.querySelector('[data-reel-gallery-lightbox-close]') : null;
+  const caption = lightbox ? lightbox.querySelector('[data-reel-gallery-lightbox-caption]') : null;
 
   // Element focused before the lightbox opened, so we can restore it on close.
   let lastFocused = null;
@@ -28,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     lightboxImage.src = img.currentSrc || img.src;
     lightboxImage.alt = img.alt || '';
+    if (caption && extra.lightboxCaption) {
+      caption.textContent = img.alt || '';
+      caption.hidden = !img.alt;
+    }
     lightbox.hidden = false;
     document.body.classList.add('reel-gallery-lightbox-open');
 
@@ -53,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   document.querySelectorAll('.woocommerce-product-gallery__image img').forEach((img) => {
-    if (config.enableZoom) {
+    if (allowZoom) {
       img.style.setProperty('--reel-gallery-zoom-scale', String(config.zoomScale || 1.45));
       img.classList.add('reel-gallery-zoomable');
     }

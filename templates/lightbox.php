@@ -21,4 +21,7 @@ defined('ABSPATH') || exit;
         aria-label="<?php esc_attr_e('Close', 'reel'); ?>"
     >&times;</button>
     <img data-reel-gallery-lightbox-image src="" alt="" />
+    <?php if (! empty($settings['lightbox_caption'])) : ?>
+        <p class="reel-gallery-lightbox__caption" data-reel-gallery-lightbox-caption></p>
+    <?php endif; ?>
 </div>
