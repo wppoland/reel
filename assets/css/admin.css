@@ -1,0 +1,388 @@
+/* Reel — admin settings UI.
+   Polished, themeable card layout on top of the WP Settings API. Uses CSS
+   custom properties, fluid spacing, logical properties, dark-mode and
+   reduced-motion guards. Real file (wp_enqueue_style) — no inlined blobs. */
+
+.reel-admin {
+    --reel-radius: 12px;
+    --reel-radius-sm: 8px;
+    --reel-gap: clamp(0.75rem, 0.4rem + 1vw, 1.25rem);
+    --reel-card-pad: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
+    --reel-accent: #5a32d6;
+    --reel-accent-ink: #fff;
+    --reel-border: #dcdce0;
+    --reel-card-bg: #fff;
+    --reel-muted: #646970;
+    --reel-ink: #1d2327;
+    --reel-help-bg: #1d2327;
+    --reel-help-ink: #fff;
+    --reel-good: #1a7f53;
+    --reel-good-bg: #e6f4ec;
+
+    max-inline-size: 980px;
+    color: var(--reel-ink);
+}
+
+/* Hero / intro band. */
+.reel-admin__hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--reel-gap);
+    padding-block: clamp(1rem, 0.6rem + 1.2vw, 1.5rem);
+    padding-inline: var(--reel-card-pad);
+    margin-block: 1rem 1.5rem;
+    border: 1px solid var(--reel-border);
+    border-radius: var(--reel-radius);
+    background:
+        radial-gradient(120% 140% at 100% 0%, rgba(90, 50, 214, 0.10), transparent 60%),
+        var(--reel-card-bg);
+}
+
+.reel-admin__hero-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 48px;
+    block-size: 48px;
+    border-radius: var(--reel-radius-sm);
+    background: var(--reel-accent);
+    color: var(--reel-accent-ink);
+    flex: 0 0 auto;
+}
+
+.reel-admin__hero-icon .dashicons {
+    font-size: 28px;
+    inline-size: 28px;
+    block-size: 28px;
+}
+
+.reel-admin__hero-text {
+    flex: 1 1 16rem;
+    min-inline-size: 0;
+}
+
+.reel-admin__hero-text h1 {
+    margin: 0 0 0.15rem;
+    font-size: clamp(1.3rem, 1.1rem + 0.7vw, 1.7rem);
+    line-height: 1.2;
+}
+
+.reel-admin__hero-text p {
+    margin: 0;
+    color: var(--reel-muted);
+    font-size: 0.95rem;
+}
+
+.reel-admin__hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.reel-admin__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding-block: 0.2rem;
+    padding-inline: 0.55rem;
+    border-radius: 999px;
+    background: var(--reel-good-bg);
+    color: var(--reel-good);
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Cards: one per settings section. */
+.reel-admin__grid {
+    display: grid;
+    gap: var(--reel-gap);
+}
+
+.reel-admin__card {
+    border: 1px solid var(--reel-border);
+    border-radius: var(--reel-radius);
+    background: var(--reel-card-bg);
+    overflow: clip;
+}
+
+.reel-admin__card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: var(--reel-card-pad);
+    border-block-end: 1px solid var(--reel-border);
+}
+
+.reel-admin__card-head .dashicons {
+    color: var(--reel-accent);
+    flex: 0 0 auto;
+}
+
+.reel-admin__card-head h2 {
+    margin: 0 0 0.15rem;
+    font-size: 1.05rem;
+    padding: 0;
+}
+
+.reel-admin__card-head p {
+    margin: 0;
+    color: var(--reel-muted);
+    font-size: 0.9rem;
+}
+
+.reel-admin__card-body {
+    padding-block: 0.5rem;
+    padding-inline: var(--reel-card-pad);
+}
+
+/* A single setting row. */
+.reel-field {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding-block: 0.9rem;
+    border-block-end: 1px solid color-mix(in srgb, var(--reel-border) 60%, transparent);
+}
+
+.reel-field:last-child {
+    border-block-end: 0;
+}
+
+.reel-field__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+}
+
+.reel-field__control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reel-field__hint {
+    margin: 0;
+    color: var(--reel-muted);
+    font-size: 0.86rem;
+    max-inline-size: 62ch;
+}
+
+/* Toggle switch built from a native checkbox (keyboard + screen-reader native). */
+.reel-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+}
+
+.reel-toggle input {
+    position: absolute;
+    opacity: 0;
+    inline-size: 44px;
+    block-size: 24px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.reel-toggle__track {
+    inline-size: 44px;
+    block-size: 24px;
+    border-radius: 999px;
+    background: #c3c4c7;
+    flex: 0 0 auto;
+    transition: background 0.18s ease;
+}
+
+.reel-toggle__track::after {
+    content: "";
+    display: block;
+    inline-size: 18px;
+    block-size: 18px;
+    margin: 3px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.18s ease;
+}
+
+.reel-toggle input:checked + .reel-toggle__track {
+    background: var(--reel-accent);
+}
+
+.reel-toggle input:checked + .reel-toggle__track::after {
+    transform: translateX(20px);
+}
+
+.reel-toggle input:focus-visible + .reel-toggle__track {
+    outline: 2px solid var(--reel-accent);
+    outline-offset: 2px;
+}
+
+.reel-toggle__text {
+    font-weight: 400;
+}
+
+/* Help affordance: a "?" button with an accessible tooltip. */
+.reel-help {
+    position: relative;
+    display: inline-flex;
+}
+
+.reel-help__btn {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 18px;
+    block-size: 18px;
+    padding: 0;
+    border: 1px solid var(--reel-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--reel-muted);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: help;
+}
+
+.reel-help__btn:hover,
+.reel-help__btn:focus-visible {
+    border-color: var(--reel-accent);
+    color: var(--reel-accent);
+}
+
+.reel-help__btn:focus-visible {
+    outline: 2px solid var(--reel-accent);
+    outline-offset: 2px;
+}
+
+.reel-help__bubble {
+    position: absolute;
+    inset-block-end: calc(100% + 8px);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    inline-size: max-content;
+    max-inline-size: 260px;
+    padding-block: 0.45rem;
+    padding-inline: 0.6rem;
+    border-radius: var(--reel-radius-sm);
+    background: var(--reel-help-bg);
+    color: var(--reel-help-ink);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    text-align: start;
+    white-space: normal;
+    z-index: 5;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+    pointer-events: none;
+}
+
+.reel-help__bubble::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-block-start-color: var(--reel-help-bg);
+}
+
+.reel-help:hover .reel-help__bubble,
+.reel-help__btn:focus-visible + .reel-help__bubble,
+.reel-help__btn[aria-expanded="true"] + .reel-help__bubble {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Inputs. */
+.reel-admin input[type="number"],
+.reel-admin input[type="text"],
+.reel-admin textarea,
+.reel-admin select {
+    border-radius: var(--reel-radius-sm);
+}
+
+.reel-admin__range {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.reel-admin__range input[type="range"] {
+    inline-size: clamp(120px, 30vw, 220px);
+    accent-color: var(--reel-accent);
+}
+
+.reel-admin__range output {
+    min-inline-size: 3ch;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+/* Shortcode helper. */
+.reel-admin__code {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding-block: 0.15rem;
+    padding-inline: 0.45rem;
+    border-radius: var(--reel-radius-sm);
+    background: color-mix(in srgb, var(--reel-accent) 8%, transparent);
+    color: var(--reel-accent);
+    font-family: Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+}
+
+.reel-admin__submit {
+    margin-block-start: 0.5rem;
+}
+
+/* Container-query enhancement: roomy two-column rows when space allows. */
+@supports (container-type: inline-size) {
+    .reel-admin__card-body {
+        container-type: inline-size;
+    }
+
+    @container (min-width: 560px) {
+        .reel-field {
+            grid-template-columns: minmax(12rem, 18rem) 1fr;
+            align-items: baseline;
+            column-gap: 1.5rem;
+        }
+
+        .reel-field__hint {
+            grid-column: 2;
+        }
+    }
+}
+
+/* Dark mode follows the OS preference. */
+@media (prefers-color-scheme: dark) {
+    .reel-admin {
+        --reel-border: #3c434a;
+        --reel-card-bg: #1d2327;
+        --reel-muted: #a7aaad;
+        --reel-ink: #e0e0e2;
+        --reel-help-bg: #2c3338;
+        --reel-good: #6ee7b7;
+        --reel-good-bg: rgba(26, 127, 83, 0.18);
+    }
+
+    .reel-toggle__track {
+        background: #50575e;
+    }
+}
+
+/* Honour reduced-motion: drop all transitions. */
+@media (prefers-reduced-motion: reduce) {
+    .reel-admin *,
+    .reel-admin *::after,
+    .reel-admin *::before {
+        transition: none !important;
+    }
+}

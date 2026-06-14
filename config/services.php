@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 use Reel\Admin\Settings;
 use Reel\Container;
+use Reel\Frontend\VideoShortcode;
 use Reel\Migrator;
 use Reel\Service\ReelService;
 
@@ -21,6 +22,12 @@ return static function (Container $c): void {
 
     // Thin adapter over the storefront-kit gallery-zoom + featured-video engines.
     $c->singleton(ReelService::class, static fn (): ReelService => new ReelService());
+
+    // Shortcode + dynamic block that place the featured video anywhere.
+    $c->singleton(
+        VideoShortcode::class,
+        static fn (Container $c): VideoShortcode => new VideoShortcode($c->get(ReelService::class)),
+    );
 
     // Admin (only needed in wp-admin context).
     if (is_admin()) {

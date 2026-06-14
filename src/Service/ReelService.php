@@ -34,6 +34,11 @@ final class ReelService implements HasHooks
 
     private ?FeaturedVideoEngine $video = null;
 
+    public function videoEngine(): ?FeaturedVideoEngine
+    {
+        return $this->video;
+    }
+
     public function __construct()
     {
         // The media engines ship with storefront-kit >= 1.3.0. When present,
@@ -96,6 +101,41 @@ final class ReelService implements HasHooks
             // gallery zoom + featured video. No hooks run until present.
             return;
         }
+
+        // The kit engine localizes a fixed config set; inject the plugin-local
+        // zoom extras (touch + caption) as a second config object on the same
+        // handle, after the engine has enqueued it on single product pages.
+        if ($this->zoom instanceof GalleryZoomEngine) {
+            add_action('wp_enqueue_scripts', [$this, 'enqueueZoomExtras'], 20);
+        }
+    }
+
+    /**
+     * Attach plugin-local zoom config (touch + caption) to the kit's gallery
+     * script. Runs after the engine's own enqueue (priority 20 vs default 10).
+     */
+    public function enqueueZoomExtras(): void
+    {
+        if (! wp_script_is('reel-gallery-zoom', 'enqueued')) {
+            return;
+        }
+
+        $settings = $this->settings();
+
+        $extra = wp_json_encode([
+            'disableZoomOnTouch' => (bool) ($settings['disable_zoom_on_touch'] ?? true),
+            'lightboxCaption'    => (bool) ($settings['lightbox_caption'] ?? false),
+        ]);
+
+        if (! is_string($extra)) {
+            return;
+        }
+
+        wp_add_inline_script(
+            'reel-gallery-zoom',
+            'window.reelGalleryExtra = ' . $extra . ';',
+            'before',
+        );
     }
 
     private function zoomEnabled(): bool
@@ -120,12 +160,23 @@ final class ReelService implements HasHooks
     {
         $settings = $this->settings();
 
-        return [
-            'enable_zoom'         => (bool) ($settings['enable_zoom'] ?? true),
-            'enable_lightbox'     => (bool) ($settings['enable_lightbox'] ?? true),
-            'zoom_scale'          => (float) ($settings['zoom_scale'] ?? 1.45),
-            'show_backdrop_close' => (bool) ($settings['show_backdrop_close'] ?? true),
+        $triggerLabel = trim((string) ($settings['trigger_label'] ?? ''));
+
+        $config = [
+            'enable_zoom'           => (bool) ($settings['enable_zoom'] ?? true),
+            'enable_lightbox'       => (bool) ($settings['enable_lightbox'] ?? true),
+            'zoom_scale'            => (float) ($settings['zoom_scale'] ?? 1.45),
+            'show_backdrop_close'   => (bool) ($settings['show_backdrop_close'] ?? true),
+            'disable_zoom_on_touch' => (bool) ($settings['disable_zoom_on_touch'] ?? true),
+            'lightbox_caption'      => (bool) ($settings['lightbox_caption'] ?? false),
         ];
+
+        // Only override the engine fallback when an explicit label is set.
+        if ($triggerLabel !== '') {
+            $config['trigger_label'] = $triggerLabel;
+        }
+
+        return $config;
     }
 
     /**
@@ -137,12 +188,49 @@ final class ReelService implements HasHooks
     {
         $settings = $this->settings();
 
+        $intro = trim((string) ($settings['video_intro'] ?? ''));
+
         return [
-            'position'   => (string) ($settings['video_position'] ?? 'after_gallery'),
-            'autoplay'   => (bool) ($settings['video_autoplay'] ?? false),
-            'show_title' => (bool) ($settings['video_show_title'] ?? true),
+            'position'       => (string) ($settings['video_position'] ?? 'after_gallery'),
+            'autoplay'       => (bool) ($settings['video_autoplay'] ?? false),
+            'show_title'     => (bool) ($settings['video_show_title'] ?? true),
+            'title'          => trim((string) ($settings['video_title'] ?? '')),
+            'intro_text'     => $intro,
+            'show_intro'     => $intro !== '',
             'show_on_single' => true,
         ];
+    }
+
+    /**
+     * Build the featured-video markup for a given product, for the shortcode /
+     * block. Returns an empty string when video is disabled or the product has
+     * no video URL. Mirrors the engine's own enable + meta resolution.
+     */
+    public function renderVideoHtml(\WC_Product $product): string
+    {
+        if (! $this->videoEnabled() || ! $this->video instanceof FeaturedVideoEngine) {
+            return '';
+        }
+
+        return $this->video->getVideoHtml($product);
+    }
+
+    /**
+     * Heading text for the featured video of a product: the per-product title
+     * meta, then the configured default, then the engine label fallback.
+     */
+    public function videoTitleFor(\WC_Product $product): string
+    {
+        $title = trim((string) $product->get_meta(self::META_VIDEO_TITLE));
+
+        if ($title !== '') {
+            return $title;
+        }
+
+        $settings = $this->settings();
+        $default  = trim((string) ($settings['video_title'] ?? ''));
+
+        return $default !== '' ? $default : __('Product video', 'reel');
     }
 
     /**
