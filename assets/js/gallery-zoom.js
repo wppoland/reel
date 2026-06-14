@@ -32,8 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const source = img.currentSrc || img.src;
+    if (!source) {
+      return;
+    }
+
     lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    lightboxImage.src = img.currentSrc || img.src;
+    lightboxImage.src = source;
     lightboxImage.alt = img.alt || '';
     if (caption && extra.lightboxCaption) {
       caption.textContent = img.alt || '';
@@ -92,10 +97,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('click', (event) => {
-    const close = event.target.closest('[data-reel-gallery-lightbox-close]');
-    const clickedLightbox = event.target.closest('[data-reel-gallery-lightbox]');
+    if (!lightbox || lightbox.hidden) {
+      return;
+    }
 
-    if (close || (clickedLightbox === event.target && config.showBackdropClose !== false)) {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const close = target.closest('[data-reel-gallery-lightbox-close]');
+    const clickedLightbox = target.closest('[data-reel-gallery-lightbox]');
+
+    if (close || (clickedLightbox === target && config.showBackdropClose !== false)) {
       closeLightbox();
     }
   });

@@ -99,6 +99,10 @@ reserves its space before loading.
 == Changelog ==
 
 = 0.2.0 =
+* Redesigned settings screen: card layout, toggle switches, inline help tooltips and a live zoom-strength control.
+* Polished storefront styling: themeable CSS custom properties, fluid sizing, dark-mode support and reduced-motion guards.
+* Accessibility: named lightbox dialog, role=tooltip help, visible focus styles and full keyboard operability.
+* Robustness: graceful empty/placeholder states, a no-layout-shift video skeleton and hardened event handling.
 * Add `[reel_video]` shortcode and a "Reel: Featured video" block to place the featured video anywhere.
 * Add lightbox caption (from image alt text) and an option to skip hover zoom on touch devices.
 * Add settings for the open-in-lightbox label, a default video heading and an optional intro paragraph.

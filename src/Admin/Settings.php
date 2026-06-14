@@ -24,6 +24,50 @@ final class Settings implements HasHooks
     {
         add_action('admin_menu', [$this, 'addMenuPage']);
         add_action('admin_init', [$this, 'registerSettings']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
+    }
+
+    /**
+     * Enqueue the settings-page CSS/JS as real files (Plugin-Check clean),
+     * only on the Reel screen. JS is deferred and loaded in the footer.
+     */
+    public function enqueueAssets(string $hook): void
+    {
+        if ($hook !== 'toplevel_page_' . self::PAGE) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'reel-admin',
+            REEL_URL . 'assets/css/admin.css',
+            [],
+            \Reel\VERSION,
+        );
+
+        wp_enqueue_script(
+            'reel-admin',
+            REEL_URL . 'assets/js/admin.js',
+            [],
+            \Reel\VERSION,
+            ['strategy' => 'defer', 'in_footer' => true],
+        );
+    }
+
+    /**
+     * Render an accessible "?" help affordance with a tooltip bubble.
+     *
+     * The button is keyboard-focusable and toggles aria-expanded (JS); the
+     * bubble is exposed to assistive tech via aria-describedby and role=tooltip,
+     * and shows on hover/focus via CSS even with JS disabled.
+     */
+    private function help(string $text, string $id): string
+    {
+        return sprintf(
+            '<span class="reel-help"><button type="button" class="reel-help__btn" aria-describedby="%1$s" aria-label="%3$s">?</button><span class="reel-help__bubble" id="%1$s" role="tooltip">%2$s</span></span>',
+            esc_attr($id),
+            esc_html($text),
+            esc_attr__('More information', 'reel'),
+        );
     }
 
     public function addMenuPage(): void
@@ -58,6 +102,21 @@ final class Settings implements HasHooks
         );
     }
 
+    /**
+     * Render a styled toggle switch backed by a native checkbox (so it stays
+     * keyboard- and screen-reader-native). Output is fully escaped.
+     */
+    private function toggle(string $key, bool $checked, string $label): void
+    {
+        printf(
+            '<label class="reel-toggle"><input type="checkbox" name="%1$s[%2$s]" value="1"%3$s /><span class="reel-toggle__track" aria-hidden="true"></span><span class="reel-toggle__text">%4$s</span></label>',
+            esc_attr(self::OPTION),
+            esc_attr($key),
+            checked($checked, true, false),
+            esc_html($label),
+        );
+    }
+
     public function renderPage(): void
     {
         if (! current_user_can('manage_woocommerce')) {
@@ -65,149 +124,236 @@ final class Settings implements HasHooks
         }
 
         $s = $this->settings();
+        $o = self::OPTION;
+
+        // Allowed HTML for the help affordance markup echoed below.
+        $help_kses = [
+            'span'   => ['class' => true, 'id' => true, 'role' => true],
+            'button' => ['type' => true, 'class' => true, 'aria-describedby' => true, 'aria-label' => true],
+        ];
         ?>
-        <div class="wrap">
-            <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-            <form method="post" action="options.php">
+        <div class="wrap reel-admin">
+            <div class="reel-admin__hero">
+                <span class="reel-admin__hero-icon" aria-hidden="true">
+                    <span class="dashicons dashicons-format-video"></span>
+                </span>
+                <div class="reel-admin__hero-text">
+                    <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+                    <p><?php esc_html_e('Hover zoom, an accessible lightbox and a featured product video for your WooCommerce gallery — tuned for speed, with no layout shift and no jQuery.', 'reel'); ?></p>
+                </div>
+                <div class="reel-admin__hero-badges">
+                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('No CLS', 'reel'); ?></span>
+                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('No jQuery', 'reel'); ?></span>
+                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('Accessible', 'reel'); ?></span>
+                </div>
+            </div>
+
+            <form method="post" action="options.php" class="reel-admin__form">
                 <?php settings_fields(self::PAGE); ?>
 
-                <h2><?php esc_html_e('Gallery zoom &amp; lightbox', 'reel'); ?></h2>
-                <table class="form-table" role="presentation">
-                    <tbody>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Hover zoom', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[enable_zoom]" value="1" <?php checked((bool) $s['enable_zoom'], true); ?> />
-                                    <?php esc_html_e('Zoom the gallery image on hover.', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Zoom scale', 'reel'); ?></th>
-                            <td>
-                                <input type="number" min="1" max="3" step="0.05" class="small-text" name="<?php echo esc_attr(self::OPTION); ?>[zoom_scale]" value="<?php echo esc_attr((string) $s['zoom_scale']); ?>" />
-                                <p class="description"><?php esc_html_e('Magnification factor on hover (1.0–3.0).', 'reel'); ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Lightbox', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[enable_lightbox]" value="1" <?php checked((bool) $s['enable_lightbox'], true); ?> />
-                                    <?php esc_html_e('Open gallery images full-screen when clicked (keyboard accessible).', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Close on backdrop', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[show_backdrop_close]" value="1" <?php checked((bool) $s['show_backdrop_close'], true); ?> />
-                                    <?php esc_html_e('Close the lightbox when the dark backdrop is clicked.', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Caption', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[lightbox_caption]" value="1" <?php checked((bool) $s['lightbox_caption'], true); ?> />
-                                    <?php esc_html_e('Show the image alt text as a caption inside the lightbox.', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Disable zoom on touch', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[disable_zoom_on_touch]" value="1" <?php checked((bool) $s['disable_zoom_on_touch'], true); ?> />
-                                    <?php esc_html_e('Skip hover zoom on touch devices, where hover is unreliable.', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Open-image label', 'reel'); ?></th>
-                            <td>
-                                <input type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION); ?>[trigger_label]" value="<?php echo esc_attr((string) $s['trigger_label']); ?>" />
-                                <p class="description"><?php esc_html_e('Accessible label for the open-in-lightbox control. Leave empty for the default.', 'reel'); ?></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="reel-admin__grid">
+                    <section class="reel-admin__card">
+                        <div class="reel-admin__card-head">
+                            <span class="dashicons dashicons-search" aria-hidden="true"></span>
+                            <div>
+                                <h2><?php esc_html_e('Gallery zoom & lightbox', 'reel'); ?></h2>
+                                <p><?php esc_html_e('How shoppers explore your product images: magnify on hover and open them full-screen.', 'reel'); ?></p>
+                            </div>
+                        </div>
+                        <div class="reel-admin__card-body">
 
-                <h2><?php esc_html_e('Featured video', 'reel'); ?></h2>
-                <p class="description">
-                    <?php esc_html_e('Set a per-product video URL in the product meta field "_reel_video_url" (self-hosted mp4/webm or an oEmbed URL such as YouTube/Vimeo).', 'reel'); ?>
-                </p>
-                <table class="form-table" role="presentation">
-                    <tbody>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Show featured video', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[enable_video]" value="1" <?php checked((bool) $s['enable_video'], true); ?> />
-                                    <?php esc_html_e('Display the product video on the single product page.', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Position', 'reel'); ?></th>
-                            <td>
-                                <select name="<?php echo esc_attr(self::OPTION); ?>[video_position]">
-                                    <option value="after_gallery" <?php selected((string) $s['video_position'], 'after_gallery'); ?>><?php esc_html_e('After the gallery', 'reel'); ?></option>
-                                    <option value="before_summary" <?php selected((string) $s['video_position'], 'before_summary'); ?>><?php esc_html_e('Before the summary', 'reel'); ?></option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Autoplay', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[video_autoplay]" value="1" <?php checked((bool) $s['video_autoplay'], true); ?> />
-                                    <?php esc_html_e('Start the video automatically (muted where the browser requires it).', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Show title', 'reel'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr(self::OPTION); ?>[video_show_title]" value="1" <?php checked((bool) $s['video_show_title'], true); ?> />
-                                    <?php esc_html_e('Show a heading above the video.', 'reel'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Default title', 'reel'); ?></th>
-                            <td>
-                                <input type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION); ?>[video_title]" value="<?php echo esc_attr((string) $s['video_title']); ?>" />
-                                <p class="description"><?php esc_html_e('Heading used when a product has no per-product video title. Leave empty for the default.', 'reel'); ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Intro text', 'reel'); ?></th>
-                            <td>
-                                <textarea class="large-text" rows="2" name="<?php echo esc_attr(self::OPTION); ?>[video_intro]"><?php echo esc_textarea((string) $s['video_intro']); ?></textarea>
-                                <p class="description"><?php esc_html_e('Optional short paragraph shown under the video heading. Leave empty to hide it.', 'reel'); ?></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Hover zoom', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('When a shopper hovers a gallery image, it magnifies in place to reveal detail — great for textures, labels and fine print. The zoom stays inside the image frame, so nothing on the page moves.', 'reel'), 'reel-help-zoom'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('enable_zoom', (bool) $s['enable_zoom'], __('Magnify the image on hover', 'reel')); ?>
+                                </div>
+                            </div>
 
-                <h2><?php esc_html_e('Placement', 'reel'); ?></h2>
-                <p class="description">
-                    <?php
-                    $reel_placement = sprintf(
-                        /* translators: %s: the [reel_video] shortcode tag. */
-                        __('Place the featured video anywhere with the %s shortcode, or the "Reel: Featured video" block. Both render the current product\'s video.', 'reel'),
-                        '<code>[reel_video]</code>',
-                    );
-                    echo wp_kses($reel_placement, ['code' => []]);
-                    ?>
-                </p>
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <label for="reel-zoom-scale"><?php esc_html_e('Zoom strength', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('How much the image grows on hover. 1.2× is subtle; 2× is dramatic. Around 1.4–1.6× reads well for most stores.', 'reel'), 'reel-help-scale'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control reel-admin__range">
+                                    <input type="range" min="1" max="3" step="0.05" value="<?php echo esc_attr((string) $s['zoom_scale']); ?>" data-reel-zoom-range aria-hidden="true" tabindex="-1" />
+                                    <input type="number" id="reel-zoom-scale" min="1" max="3" step="0.05" class="small-text" name="<?php echo esc_attr($o); ?>[zoom_scale]" value="<?php echo esc_attr((string) $s['zoom_scale']); ?>" data-reel-zoom-number />
+                                    <output data-reel-zoom-output aria-hidden="true"></output>
+                                </div>
+                                <p class="reel-field__hint"><?php esc_html_e('Magnification factor on hover, from 1.0× (off) to 3.0×.', 'reel'); ?></p>
+                            </div>
 
-                <?php submit_button(); ?>
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Disable zoom on touch', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Phones and tablets have no real hover, so the zoom can feel unpredictable. Keep this on to skip it on touch devices and rely on the lightbox there instead.', 'reel'), 'reel-help-touch'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('disable_zoom_on_touch', (bool) $s['disable_zoom_on_touch'], __('Skip hover zoom on touch devices', 'reel')); ?>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Lightbox', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Clicking a gallery image opens it full-screen over a dimmed backdrop. Fully keyboard-operable: open with Enter/Space, close with Escape, and focus returns to where it was.', 'reel'), 'reel-help-lightbox'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('enable_lightbox', (bool) $s['enable_lightbox'], __('Open images full-screen on click', 'reel')); ?>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Close on backdrop click', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Let shoppers dismiss the lightbox by clicking the dark area around the image, in addition to the close button and Escape key.', 'reel'), 'reel-help-backdrop'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('show_backdrop_close', (bool) $s['show_backdrop_close'], __('Click outside the image to close', 'reel')); ?>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Image caption', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Show each image\'s alt text as a caption inside the lightbox. Helpful when your images have descriptive alt text; leave off if they don\'t.', 'reel'), 'reel-help-caption'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('lightbox_caption', (bool) $s['lightbox_caption'], __('Show the image alt text as a caption', 'reel')); ?>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <label for="reel-trigger-label"><?php esc_html_e('Open-image label', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('The accessible label screen readers announce for each gallery image, e.g. "Open image in full screen". Leave empty to use the built-in default.', 'reel'), 'reel-help-trigger'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <input type="text" id="reel-trigger-label" class="regular-text" name="<?php echo esc_attr($o); ?>[trigger_label]" value="<?php echo esc_attr((string) $s['trigger_label']); ?>" placeholder="<?php esc_attr_e('Open image in full screen', 'reel'); ?>" />
+                                </div>
+                                <p class="reel-field__hint"><?php esc_html_e('Accessible label for the open-in-lightbox control. Leave empty for the default.', 'reel'); ?></p>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="reel-admin__card">
+                        <div class="reel-admin__card-head">
+                            <span class="dashicons dashicons-format-video" aria-hidden="true"></span>
+                            <div>
+                                <h2><?php esc_html_e('Featured video', 'reel'); ?></h2>
+                                <p>
+                                    <?php
+                                    $reel_meta = sprintf(
+                                        /* translators: %s: the product meta field name. */
+                                        __('Add a video to any product by setting its %s meta field to a self-hosted MP4/WebM file or a YouTube/Vimeo link.', 'reel'),
+                                        '<code class="reel-admin__code">_reel_video_url</code>',
+                                    );
+                                    echo wp_kses($reel_meta, ['code' => ['class' => true]]);
+                                    ?>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="reel-admin__card-body">
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Show featured video', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Master switch for the product video. When on, products that have a video URL show it on their single product page in the position you choose below.', 'reel'), 'reel-help-video'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('enable_video', (bool) $s['enable_video'], __('Display the product video on the product page', 'reel')); ?>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <label for="reel-video-position"><?php esc_html_e('Position', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('Where the video appears: directly under the image gallery, or above the title/price summary column. Pick whichever fits your theme best.', 'reel'), 'reel-help-position'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <select id="reel-video-position" name="<?php echo esc_attr($o); ?>[video_position]">
+                                        <option value="after_gallery" <?php selected((string) $s['video_position'], 'after_gallery'); ?>><?php esc_html_e('After the gallery', 'reel'); ?></option>
+                                        <option value="before_summary" <?php selected((string) $s['video_position'], 'before_summary'); ?>><?php esc_html_e('Before the summary', 'reel'); ?></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Autoplay', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Start the video automatically on page load. Browsers only allow this when the video is muted, so sound stays off until the shopper turns it on. Use sparingly — it can be distracting.', 'reel'), 'reel-help-autoplay'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('video_autoplay', (bool) $s['video_autoplay'], __('Play automatically (muted)', 'reel')); ?>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <?php esc_html_e('Show heading', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Display a heading above the video. Turn off for a cleaner, heading-free embed.', 'reel'), 'reel-help-showtitle'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <?php $this->toggle('video_show_title', (bool) $s['video_show_title'], __('Show a heading above the video', 'reel')); ?>
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <label for="reel-video-title"><?php esc_html_e('Default heading', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('The heading used when a product has no video heading of its own. Leave empty to use the built-in "Product video" text.', 'reel'), 'reel-help-deftitle'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <input type="text" id="reel-video-title" class="regular-text" name="<?php echo esc_attr($o); ?>[video_title]" value="<?php echo esc_attr((string) $s['video_title']); ?>" placeholder="<?php esc_attr_e('Product video', 'reel'); ?>" />
+                                </div>
+                            </div>
+
+                            <div class="reel-field">
+                                <span class="reel-field__label">
+                                    <label for="reel-video-intro"><?php esc_html_e('Intro text', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('An optional short paragraph shown under the heading, e.g. "See it in action." Leave empty to hide it.', 'reel'), 'reel-help-intro'), $help_kses); ?>
+                                </span>
+                                <div class="reel-field__control">
+                                    <textarea id="reel-video-intro" class="large-text" rows="2" name="<?php echo esc_attr($o); ?>[video_intro]" placeholder="<?php esc_attr_e('See this product in action…', 'reel'); ?>"><?php echo esc_textarea((string) $s['video_intro']); ?></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="reel-admin__card">
+                        <div class="reel-admin__card-head">
+                            <span class="dashicons dashicons-shortcode" aria-hidden="true"></span>
+                            <div>
+                                <h2><?php esc_html_e('Place it anywhere', 'reel'); ?></h2>
+                                <p><?php esc_html_e('Beyond the automatic gallery position, drop the current product\'s video wherever you like.', 'reel'); ?></p>
+                            </div>
+                        </div>
+                        <div class="reel-admin__card-body">
+                            <div class="reel-field">
+                                <span class="reel-field__label"><?php esc_html_e('Shortcode', 'reel'); ?></span>
+                                <div class="reel-field__control">
+                                    <code class="reel-admin__code">[reel_video]</code>
+                                </div>
+                                <p class="reel-field__hint"><?php esc_html_e('Paste into any product description or page. Optional attributes: id="123" to target a specific product, and title="hide" to drop the heading.', 'reel'); ?></p>
+                            </div>
+                            <div class="reel-field">
+                                <span class="reel-field__label"><?php esc_html_e('Block', 'reel'); ?></span>
+                                <div class="reel-field__control">
+                                    <code class="reel-admin__code"><?php esc_html_e('Reel: Featured video', 'reel'); ?></code>
+                                </div>
+                                <p class="reel-field__hint"><?php esc_html_e('Search for it in the block inserter. Renders the same video as the shortcode.', 'reel'); ?></p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="reel-admin__submit">
+                    <?php submit_button(__('Save changes', 'reel')); ?>
+                </div>
             </form>
         </div>
         <?php

@@ -88,7 +88,36 @@ final class VideoShortcode implements HasHooks
         $productId = isset($attributes['productId']) ? (int) $attributes['productId'] : 0;
         $showTitle = isset($attributes['showTitle']) ? (bool) $attributes['showTitle'] : null;
 
-        return $this->render($productId, $showTitle);
+        $html = $this->render($productId, $showTitle);
+
+        // In the editor / REST preview, an empty string renders as a blank,
+        // confusing block. Show a friendly placeholder explaining why instead.
+        if ($html === '' && $this->isEditorPreview()) {
+            return $this->editorPlaceholder();
+        }
+
+        return $html;
+    }
+
+    /**
+     * True when the block is being rendered for the editor preview (REST), where
+     * a blank output would be confusing.
+     */
+    private function isEditorPreview(): bool
+    {
+        return defined('REST_REQUEST') && REST_REQUEST && is_user_logged_in();
+    }
+
+    /**
+     * A friendly, escaped placeholder for the editor when no video is available.
+     */
+    private function editorPlaceholder(): string
+    {
+        return sprintf(
+            '<div class="reel-featured-video reel-featured-video--placeholder" style="padding:1.25rem;border:1px dashed currentColor;border-radius:14px;opacity:.7;text-align:center;">%s<br><small>%s</small></div>',
+            esc_html__('Reel: Featured video', 'reel'),
+            esc_html__('This shows the current product\'s video on the storefront. Set a video URL in the product\'s _reel_video_url meta field, then view the product page.', 'reel'),
+        );
     }
 
     /**

@@ -1,15 +1,30 @@
-/* Reel — gallery hover-zoom + lightbox. Self-contained, no jQuery, no CLS:
-   the lightbox is a fixed overlay that starts hidden, so it never reserves or
-   shifts layout. The zoom transform stays inside the clipped gallery frame. */
+/* Reel — gallery hover-zoom + accessible lightbox.
+   Self-contained, no jQuery, no CLS: the lightbox is a fixed overlay that starts
+   hidden, so it never reserves or shifts layout. The zoom transform stays inside
+   the clipped gallery frame. Themeable via custom properties; honours dark mode
+   and reduced-motion. */
+
+/* Themeable tokens. Declared on the gallery and the lightbox shell (no wrapper
+   element required), so every var() resolves; the inline fallbacks below keep
+   the styles correct even if a theme resets these. */
+.woocommerce-product-gallery,
+.reel-gallery-lightbox {
+    --reel-radius: 14px;
+    --reel-zoom-duration: 0.22s;
+    --reel-backdrop: rgba(0, 0, 0, 0.82);
+    --reel-overlay-ink: #fff;
+    --reel-z: 9999;
+}
 
 .woocommerce-product-gallery__image {
     overflow: hidden;
-    border-radius: 14px;
+    border-radius: var(--reel-radius, 14px);
 }
 
 .reel-gallery-zoomable {
-    transition: transform .22s ease;
+    transition: transform var(--reel-zoom-duration, 0.22s) ease;
     cursor: zoom-in;
+    will-change: transform;
 }
 
 .reel-gallery-lightbox-trigger {
@@ -20,13 +35,28 @@
     transform: scale(var(--reel-gallery-zoom-scale, 1.45));
 }
 
+/* Visible focus ring when the image is reached by keyboard. */
+.reel-gallery-lightbox-trigger:focus-visible {
+    outline: 3px solid Highlight;
+    outline: 3px solid -webkit-focus-ring-color;
+    outline-offset: 3px;
+}
+
 .reel-gallery-lightbox {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, .82);
+    background: var(--reel-backdrop, rgba(0, 0, 0, 0.82));
     display: grid;
     place-items: center;
-    z-index: 9999;
+    padding: clamp(0.75rem, 0.4rem + 2vw, 2rem);
+    z-index: var(--reel-z, 9999);
+    /* Subtle fade-in on open; guarded for reduced motion below. */
+    animation: reel-lightbox-in 0.18s ease both;
+}
+
+@keyframes reel-lightbox-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 /* `display: grid` above otherwise wins over the UA `[hidden] { display: none }`
@@ -37,36 +67,77 @@
 }
 
 .reel-gallery-lightbox img {
-    max-width: min(92vw, 1200px);
-    max-height: 88vh;
-    border-radius: 14px;
+    max-inline-size: min(92vw, 1200px);
+    max-block-size: 88vh;
+    border-radius: var(--reel-radius, 14px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .reel-gallery-lightbox__close {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    inset-block-start: clamp(0.75rem, 2vw, 1.25rem);
+    inset-inline-end: clamp(0.75rem, 2vw, 1.25rem);
+    display: grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
     border: 0;
-    background: transparent;
-    color: #fff;
-    font-size: 34px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--reel-overlay-ink, #fff);
+    font-size: 30px;
     line-height: 1;
     cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.reel-gallery-lightbox__close:hover {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.reel-gallery-lightbox__close:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
 }
 
 .reel-gallery-lightbox__caption {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 20px;
-    margin: 0 auto;
-    max-width: min(92vw, 1200px);
-    padding: 8px 14px;
-    color: #fff;
-    font-size: 14px;
+    inset-inline: 0;
+    inset-block-end: clamp(0.75rem, 3vw, 1.5rem);
+    margin-inline: auto;
+    max-inline-size: min(92vw, 1200px);
+    padding-block: 0.5rem;
+    padding-inline: 0.9rem;
+    color: var(--reel-overlay-ink, #fff);
+    font-size: clamp(0.85rem, 0.8rem + 0.3vw, 1rem);
     text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 body.reel-gallery-lightbox-open {
     overflow: hidden;
+}
+
+/* The lightbox is dark by design; nudge the backdrop a touch darker in OS
+   dark mode for a more native feel. */
+@media (prefers-color-scheme: dark) {
+    .reel-gallery-lightbox {
+        --reel-backdrop: rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* Respect users who prefer less motion: no zoom animation, no fade. */
+@media (prefers-reduced-motion: reduce) {
+    .reel-gallery-zoomable,
+    .reel-gallery-lightbox__close {
+        transition: none;
+    }
+
+    .woocommerce-product-gallery__image:hover .reel-gallery-zoomable {
+        transform: none;
+    }
+
+    .reel-gallery-lightbox {
+        animation: none;
+    }
 }

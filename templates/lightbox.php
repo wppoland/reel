@@ -13,13 +13,21 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 ?>
-<div class="reel-gallery-lightbox" data-reel-gallery-lightbox hidden role="dialog" aria-modal="true" tabindex="-1">
+<div
+    class="reel-gallery-lightbox"
+    data-reel-gallery-lightbox
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-label="<?php esc_attr_e('Product image viewer', 'reel'); ?>"
+    tabindex="-1"
+>
     <button
         type="button"
         class="reel-gallery-lightbox__close"
         data-reel-gallery-lightbox-close
-        aria-label="<?php esc_attr_e('Close', 'reel'); ?>"
-    >&times;</button>
+        aria-label="<?php esc_attr_e('Close image viewer', 'reel'); ?>"
+    ><span aria-hidden="true">&times;</span></button>
     <img data-reel-gallery-lightbox-image src="" alt="" />
     <?php if (! empty($settings['lightbox_caption'])) : ?>
         <p class="reel-gallery-lightbox__caption" data-reel-gallery-lightbox-caption></p>
