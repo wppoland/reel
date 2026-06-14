@@ -205,6 +205,13 @@ final class ReelService implements HasHooks
      * Build the featured-video markup for a given product, for the shortcode /
      * block. Returns an empty string when video is disabled or the product has
      * no video URL. Mirrors the engine's own enable + meta resolution.
+     *
+     * For oEmbed URLs (YouTube/Vimeo/etc.) the engine calls wp_oembed_get(),
+     * which performs a blocking remote HTTP request and does NOT cache on its
+     * own. A shortcode/block can appear on any page, so cache the built markup
+     * in a short-lived transient keyed by product, video URL and autoplay so a
+     * page view never blocks on a remote oEmbed fetch. Self-hosted files build
+     * locally and are cheap, but caching them too keeps the path uniform.
      */
     public function renderVideoHtml(\WC_Product $product): string
     {
@@ -212,7 +219,31 @@ final class ReelService implements HasHooks
             return '';
         }
 
-        return $this->video->getVideoHtml($product);
+        $url = trim((string) $product->get_meta(self::META_VIDEO_URL));
+
+        if ($url === '') {
+            return '';
+        }
+
+        $autoplay = (bool) ($this->settings()['video_autoplay'] ?? false);
+
+        // Key on a hash of the URL + autoplay so changing the meta or toggling
+        // autoplay invalidates the cache automatically. Bounded to 50 chars.
+        $cacheKey = 'reel_video_' . md5($product->get_id() . '|' . $url . '|' . ($autoplay ? '1' : '0'));
+
+        $cached = get_transient($cacheKey);
+
+        if (is_string($cached)) {
+            return $cached;
+        }
+
+        $html = $this->video->getVideoHtml($product);
+
+        // Cache successful builds for an hour; cache empty results briefly so a
+        // transient oEmbed failure is retried soon rather than stuck blank.
+        set_transient($cacheKey, $html, $html !== '' ? HOUR_IN_SECONDS : MINUTE_IN_SECONDS * 5);
+
+        return $html;
     }
 
     /**
