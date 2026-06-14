@@ -1,8 +1,7 @@
 <?php
 /**
- * Featured product video, rendered on the single product page by the
- * storefront-kit FeaturedVideoEngine. The embed/video HTML is built by the
- * engine via WooCommerce/WordPress (wp_video_shortcode / wp_oembed_get) and is
+ * Featured product video, rendered on the single product page. The embed/video
+ * HTML is built via WordPress (wp_video_shortcode / wp_oembed_get) and is
  * already safe markup.
  *
  * @package Reel

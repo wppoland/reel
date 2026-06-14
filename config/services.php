@@ -1,8 +1,7 @@
 <?php
 /**
  * Service wiring. Returns a closure that registers every service in the
- * container. Keep services thin; product logic lives in storefront-kit engines
- * instantiated here with this plugin's text-domain / option prefix / asset URLs.
+ * container.
  *
  * @package Reel
  */
@@ -20,7 +19,6 @@ defined('ABSPATH') || exit;
 return static function (Container $c): void {
     $c->singleton(Migrator::class, static fn (): Migrator => new Migrator());
 
-    // Thin adapter over the storefront-kit gallery-zoom + featured-video engines.
     $c->singleton(ReelService::class, static fn (): ReelService => new ReelService());
 
     // Shortcode + dynamic block that place the featured video anywhere.

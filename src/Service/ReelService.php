@@ -11,22 +11,19 @@ use WPPoland\StorefrontKit\Media\GalleryZoomEngine;
 defined('ABSPATH') || exit;
 
 /**
- * Thin adapter over the storefront-kit media engines.
+ * Wires {@see GalleryZoomEngine} and {@see FeaturedVideoEngine} with this
+ * plugin's text-domain ('reel'), option prefix ('reel_'), asset URLs and
+ * product meta keys. This class supplies localisation, option storage, asset
+ * URLs and template rendering.
  *
- * Injects this plugin's text-domain ('reel'), option prefix ('reel_'), asset
- * URLs and product meta keys into the namespace-neutral
- * {@see GalleryZoomEngine} and {@see FeaturedVideoEngine}. All media logic
- * lives in the kit; this class only supplies localisation, option storage,
- * asset URLs and template rendering.
- *
- * The zoom/lightbox/video CSS+JS ship in this plugin (assets/), enqueued by the
- * kit engines with the no-jQuery, deferred, in-footer convention.
+ * The zoom/lightbox/video CSS+JS ship in this plugin (assets/), enqueued with
+ * the no-jQuery, deferred, in-footer convention.
  */
 final class ReelService implements HasHooks
 {
     private const OPTION = 'reel_settings';
 
-    /** Product meta keys (mirrors Polski's featured-video meta). */
+    /** Product meta keys for the featured video. */
     private const META_VIDEO_URL   = '_reel_video_url';
     private const META_VIDEO_TITLE = '_reel_video_title';
 
@@ -41,9 +38,9 @@ final class ReelService implements HasHooks
 
     public function __construct()
     {
-        // The media engines ship with storefront-kit >= 1.3.0. When present,
-        // wire them with this plugin's text-domain / option prefix / assets.
-        // Otherwise leave the service inert (see registerHooks()).
+        // When the media engines are available, wire them with this plugin's
+        // text-domain / option prefix / assets. Otherwise leave the service inert
+        // (see registerHooks()).
         if (class_exists(GalleryZoomEngine::class)) {
             $this->zoom = new GalleryZoomEngine(
                 'reelGalleryZoom',
@@ -96,22 +93,20 @@ final class ReelService implements HasHooks
         }
 
         if (! $registered) {
-            // TODO: storefront-kit < 1.3.0 has no Media engines. Bump the
-            // `wppoland/storefront-kit` constraint (composer update) to enable
-            // gallery zoom + featured video. No hooks run until present.
+            // The media engines are unavailable; no hooks run until present.
             return;
         }
 
-        // The kit engine localizes a fixed config set; inject the plugin-local
-        // zoom extras (touch + caption) as a second config object on the same
-        // handle, after the engine has enqueued it on single product pages.
+        // The engine localizes a fixed config set; inject the plugin-local zoom
+        // extras (touch + caption) as a second config object on the same handle,
+        // after the engine has enqueued it on single product pages.
         if ($this->zoom instanceof GalleryZoomEngine) {
             add_action('wp_enqueue_scripts', [$this, 'enqueueZoomExtras'], 20);
         }
     }
 
     /**
-     * Attach plugin-local zoom config (touch + caption) to the kit's gallery
+     * Attach plugin-local zoom config (touch + caption) to the gallery
      * script. Runs after the engine's own enqueue (priority 20 vs default 10).
      */
     public function enqueueZoomExtras(): void

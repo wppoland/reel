@@ -40,9 +40,6 @@ Need the video somewhere other than the gallery area? Drop the `[reel_video]`
 shortcode (or the **Reel: Featured video** block) into any product content and it
 renders the current product's video, with the same reserved-space, no-CLS frame.
 
-The media engines are provided by the shared **storefront-kit** package, so the
-same battle-tested code powers Reel and its sibling WPPoland plugins.
-
 = Features =
 
 * Gallery image hover zoom with a configurable scale.

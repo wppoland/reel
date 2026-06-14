@@ -1,10 +1,9 @@
 /**
  * Reel — gallery hover-zoom + accessible lightbox.
  *
- * No jQuery, deferred, in-footer. Config is injected by the storefront-kit
- * GalleryZoomEngine via wp_localize_script as window.reelGalleryZoom. The
- * lightbox shell is printed in the footer by the engine (templates/lightbox.php)
- * and starts hidden, so there is no layout shift.
+ * No jQuery, deferred, in-footer. Config is injected via wp_localize_script as
+ * window.reelGalleryZoom. The lightbox shell is printed in the footer
+ * (templates/lightbox.php) and starts hidden, so there is no layout shift.
  */
 document.addEventListener('DOMContentLoaded', () => {
   const config = window.reelGalleryZoom;
@@ -13,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Plugin-local extras injected on the same handle (the kit engine localizes
-  // only the core config object). Optional — defaults keep prior behaviour.
+  // Plugin-local extras injected on the same handle (only the core config object
+  // is localized otherwise). Optional — defaults keep prior behaviour.
   const extra = window.reelGalleryExtra || {};
   const isTouch = window.matchMedia ? window.matchMedia('(hover: none)').matches : false;
   const allowZoom = config.enableZoom && !(extra.disableZoomOnTouch && isTouch);

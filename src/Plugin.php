@@ -51,7 +51,7 @@ final class Plugin
         }
 
         /**
-         * Fires after Reel has fully booted. PRO companions hook here.
+         * Fires after Reel has fully booted. Other code can hook here to extend it.
          *
          * @param Plugin $plugin The booted plugin instance.
          */
