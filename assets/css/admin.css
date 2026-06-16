@@ -8,7 +8,15 @@
     --reel-radius-sm: 8px;
     --reel-gap: clamp(0.75rem, 0.4rem + 1vw, 1.25rem);
     --reel-card-pad: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
-    --reel-accent: #5a32d6;
+
+    /* Accent — Reel's projector amber, the same warm cast used on the
+       storefront video player (family consistency). Two tones:
+       --reel-accent is computed for AA text/UI on the wp-admin surface
+       (#9c5d0f = 5.27:1 on #fff, 4.63:1 on #f0f0f1 — passes 4.5:1 text and
+       3:1 UI); --reel-beam is the bright decorative amber used only as a faint
+       non-text fill (hero glow). Never colour text with --reel-beam. */
+    --reel-accent: #9c5d0f;
+    --reel-beam: #e8a23a;
     --reel-accent-ink: #fff;
     --reel-border: #dcdce0;
     --reel-card-bg: #fff;
@@ -35,7 +43,7 @@
     border: 1px solid var(--reel-border);
     border-radius: var(--reel-radius);
     background:
-        radial-gradient(120% 140% at 100% 0%, rgba(90, 50, 214, 0.10), transparent 60%),
+        radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--reel-beam) 14%, transparent), transparent 60%),
         var(--reel-card-bg);
 }
 
@@ -371,6 +379,10 @@
         --reel-help-bg: #2c3338;
         --reel-good: #6ee7b7;
         --reel-good-bg: rgba(26, 127, 83, 0.18);
+        /* Lift the amber on the dark card so accents stay vivid and AA
+           (#f0b25e = 8.50:1 on the #1d2327 card surface). */
+        --reel-accent: #f0b25e;
+        --reel-accent-ink: #1d2327;
     }
 
     .reel-toggle__track {
