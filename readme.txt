@@ -1,6 +1,6 @@
 === Reel - Gallery and Video for WooCommerce ===
 Contributors: wppoland
-Tags: woocommerce, product gallery, image zoom, lightbox, product video
+Tags: woocommerce, product gallery, product video, image zoom, gallery slider
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
@@ -8,11 +8,11 @@ Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Hover zoom, an accessible lightbox and a featured product video for the WooCommerce product gallery — no jQuery, no layout shift.
+WooCommerce product gallery upgrades: image zoom, gallery lightbox, gallery slider controls and product video. No jQuery.
 
 == Description ==
 
-Reel adds three things to the WooCommerce single product gallery:
+Reel upgrades the WooCommerce single product gallery with product image zoom, an accessible gallery lightbox and a featured product video:
 
 * **Hover zoom.** Gallery images magnify on hover at a zoom scale you set (1.0× to
   3.0×). The transform is clipped to the gallery frame, so the rest of the page
@@ -74,7 +74,7 @@ developed in the open, so bug reports and pull requests are welcome there.
 
 = Does it require WooCommerce? =
 
-Yes.
+Yes. Reel is a WooCommerce product gallery plugin and runs on single product pages.
 
 = Which video sources are supported? =
 
@@ -86,11 +86,23 @@ player. Any oEmbed-supported URL (YouTube, Vimeo, etc.) is embedded automaticall
 No. Reel ships one vanilla-JavaScript file, deferred and loaded in the footer,
 and only on the single product page.
 
+= Does Reel replace the WooCommerce product gallery? =
+
+No. Reel enhances the existing WooCommerce product gallery with image zoom, lightbox behaviour and optional product video.
+
+= Can I show a product video outside the gallery? =
+
+Yes. Use the `[reel_video]` shortcode or the "Reel: Featured video" block to place the product video in custom product content.
+
 = Will it cause layout shift (CLS)? =
 
 No. The lightbox is a fixed overlay that starts hidden, the zoom transform is
 clipped to the gallery frame, and the video sits in a fixed-ratio frame that
 reserves its space before loading.
+
+= Is the lightbox keyboard accessible? =
+
+Yes. Shoppers can open images with Enter or Space, close with Escape, and focus returns to the image that opened the lightbox.
 
 == Screenshots ==
 
