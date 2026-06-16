@@ -13,6 +13,10 @@
     --reel-zoom-duration: 0.22s;
     --reel-backdrop: rgba(0, 0, 0, 0.82);
     --reel-overlay-ink: #fff;
+    /* Shared accent with the player frame: projector amber. Used here only as a
+       quiet focus/hover cue so both surfaces read as one plugin — no bold move
+       on the gallery; the player frame owns the moment. */
+    --reel-beam: #e8a23a;
     --reel-z: 9999;
 }
 
@@ -37,8 +41,7 @@
 
 /* Visible focus ring when the image is reached by keyboard. */
 .reel-gallery-lightbox-trigger:focus-visible {
-    outline: 3px solid Highlight;
-    outline: 3px solid -webkit-focus-ring-color;
+    outline: 3px solid var(--reel-beam, #e8a23a);
     outline-offset: 3px;
 }
 
@@ -96,7 +99,7 @@
 }
 
 .reel-gallery-lightbox__close:focus-visible {
-    outline: 3px solid #fff;
+    outline: 3px solid var(--reel-beam, #e8a23a);
     outline-offset: 2px;
 }
 

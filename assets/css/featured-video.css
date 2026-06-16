@@ -1,14 +1,57 @@
 /* Reel — featured product video. Responsive 16:9 frame reserves its space via
    aspect-ratio, so the embed/video loads without layout shift (no CLS).
-   Themeable via custom properties; honours dark mode and reduced motion. */
+   Themeable via custom properties; honours dark mode and reduced motion.
+
+   Craft note — the moment: the player frame is treated as a lit screen.
+   A thin "projector beam" of warm light catches the top edge of the frame and
+   the loading state glows like a projector warming up. The accent is a
+   projector amber (light through film), grounded in this plugin's cinema world
+   — deliberately not a default UI blue. Restraint elsewhere. */
 
 .reel-featured-video {
+    /* Theme-inheriting fallbacks: every token falls back to a sane literal so a
+       theme that resets nothing still renders correctly, while a theme that sets
+       --reel-* wins. */
     --reel-radius: 14px;
     --reel-muted: #646970;
-    --reel-skeleton: #ececef;
-    --reel-skeleton-sheen: #f6f7f7;
+    --reel-screen: #0c0d10;
+    --reel-skeleton: #14161b;
+    --reel-skeleton-sheen: #20232b;
+    /* Projector amber — the warm cast of light through film. */
+    --reel-beam: #e8a23a;
+    --reel-beam-soft: rgba(232, 162, 58, 0.32);
+    --reel-beam-faint: rgba(232, 162, 58, 0.12);
 
     margin-block-start: clamp(1rem, 0.7rem + 1vw, 1.5rem);
+}
+
+/* "Now playing" eyebrow — names the outcome, sentence case, with one softly
+   pulsing amber dot that reads as a live projector lamp. */
+.reel-featured-video__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block: 0 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--reel-muted, #646970);
+}
+
+.reel-featured-video__eyebrow::before {
+    content: "";
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--reel-beam, #e8a23a);
+    box-shadow: 0 0 0 0 var(--reel-beam-soft, rgba(232, 162, 58, 0.32));
+    animation: reel-lamp 2.4s ease-in-out infinite;
+}
+
+@keyframes reel-lamp {
+    0%, 100% { box-shadow: 0 0 0 0 var(--reel-beam-soft, rgba(232, 162, 58, 0.32)); }
+    50%      { box-shadow: 0 0 0 5px var(--reel-beam-faint, rgba(232, 162, 58, 0.12)); }
 }
 
 .reel-featured-video__title {
@@ -28,9 +71,15 @@
     aspect-ratio: 16 / 9;
     border-radius: var(--reel-radius, 14px);
     overflow: hidden;
-    /* Skeleton tint reserves a tasteful placeholder behind the embed while it
-       loads — no blank flash, no shift. The embed paints over it. */
-    background: var(--reel-skeleton, #ececef);
+    /* The frame is a screen: a deep cinematic ink that reserves space and warms
+       toward amber as the embed loads — no blank flash, no shift. */
+    background:
+        radial-gradient(120% 80% at 50% 100%, var(--reel-beam-faint, rgba(232, 162, 58, 0.12)), transparent 60%),
+        var(--reel-screen, #0c0d10);
+    /* A hairline ring + soft amber halo set the player apart from page content. */
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+        0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .reel-featured-video__embed iframe,
@@ -52,7 +101,29 @@
     block-size: 100%;
 }
 
-/* Animated skeleton sheen while the embed has not yet painted. */
+/* THE MOMENT — the projector beam. A thin bar of warm light catches the top
+   edge of the screen, brightest at centre, fading to the corners. It sits above
+   the loading skeleton and below the painted embed (z-order via ::after on the
+   frame), so it frames the player without ever covering the controls. */
+.reel-featured-video__embed::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 3px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--reel-beam, #e8a23a) 50%,
+        transparent
+    );
+    box-shadow: 0 0 12px var(--reel-beam-soft, rgba(232, 162, 58, 0.32));
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Skeleton sheen while the embed has not yet painted — a warm projector glow
+   sweeping the screen, not a cold gray shimmer. */
 .reel-featured-video__embed::before {
     content: "";
     position: absolute;
@@ -60,7 +131,7 @@
     background: linear-gradient(
         100deg,
         transparent 30%,
-        var(--reel-skeleton-sheen, #f6f7f7) 50%,
+        var(--reel-skeleton-sheen, #20232b) 50%,
         transparent 70%
     );
     background-size: 200% 100%;
@@ -78,16 +149,19 @@
     to   { background-position: -200% 0; }
 }
 
+/* The frame is intentionally dark in both schemes (a screen is a screen); in OS
+   dark mode only the muted text and skeleton tones adapt. */
 @media (prefers-color-scheme: dark) {
     .reel-featured-video {
         --reel-muted: #a7aaad;
-        --reel-skeleton: #2c3338;
-        --reel-skeleton-sheen: #3c434a;
+        --reel-skeleton: #1a1d23;
+        --reel-skeleton-sheen: #262a32;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .reel-featured-video__embed::before {
+    .reel-featured-video__embed::before,
+    .reel-featured-video__eyebrow::before {
         animation: none;
     }
 }
