@@ -8,37 +8,43 @@ Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Hover zoom, an accessible lightbox and a featured product video for the WooCommerce product gallery — reserved space, no jQuery.
+Hover zoom, an accessible lightbox and a featured product video for the WooCommerce product gallery — no jQuery, no layout shift.
 
 == Description ==
 
-Reel upgrades the WooCommerce single product gallery with three things shoppers
-expect from a modern store:
+Reel adds three things to the WooCommerce single product gallery:
 
-* **Hover zoom** — gallery images magnify smoothly on hover, with a configurable
-  zoom scale. The transform is clipped to the gallery frame, so nothing shifts.
-* **Accessible lightbox** — click (or press Enter/Space) any gallery image to open
-  it full screen. The lightbox is fully keyboard operable, traps focus on its
-  close control, restores focus on close, and dismisses on Escape or a backdrop
-  click. It is a fixed overlay that starts hidden, so it costs zero layout shift.
-* **Featured video** — show a per-product video (self-hosted MP4/WebM or an oEmbed
-  URL such as YouTube or Vimeo) either after the gallery or before the product
-  summary, inside a responsive 16:9 frame that reserves its space (no CLS).
+* **Hover zoom.** Gallery images magnify on hover at a zoom scale you set (1.0× to
+  3.0×). The transform is clipped to the gallery frame, so the rest of the page
+  stays put.
+* **Accessible lightbox.** Click, or press Enter/Space, on any gallery image to
+  open it full screen. The lightbox is keyboard-operable: Tab stays on the close
+  button so focus can't slip behind the overlay, Escape closes it, and focus
+  returns to the image you opened. It's a fixed overlay that starts hidden, so it
+  reserves no space until used.
+* **Featured video.** Show a per-product video — a self-hosted MP4/WebM file or a
+  YouTube/Vimeo (oEmbed) URL — after the gallery or before the product summary.
+  The video sits in a 16:9 frame sized with `aspect-ratio`, so its space is held
+  before it loads.
 
-Everything is rendered server-side and enhanced with a single small vanilla-JS
-file — **no jQuery**, deferred and loaded in the footer. Assets only load on the
-single product page.
+The markup is built in PHP and progressively enhanced by one vanilla-JavaScript
+file (no jQuery), deferred and loaded in the footer. Scripts and styles only
+enqueue on the single product page.
 
-Configuration lives under a top-level **Reel** admin menu: toggle hover zoom, the
-lightbox and the featured video independently, set the zoom scale and video
-position, choose autoplay, show an alt-text caption in the lightbox, skip hover
-zoom on touch devices, and set a default video heading and intro. The per-product
-video URL is read from the `_reel_video_url` product meta field (with an optional
-`_reel_video_title`).
+Settings live under a top-level **Reel** admin menu. Each of the three features
+has its own on/off switch; you can also set the zoom scale and skip it on touch
+devices, show an alt-text caption in the lightbox, relabel the open-image control
+for screen readers, and choose the video's position, autoplay, heading and intro
+text. The per-product video URL comes from the `_reel_video_url` product meta
+field, with an optional `_reel_video_title` for that product's heading.
 
-Need the video somewhere other than the gallery area? Drop the `[reel_video]`
-shortcode (or the **Reel: Featured video** block) into any product content and it
-renders the current product's video, with the same reserved-space, no-CLS frame.
+To place the video somewhere other than the gallery area, drop the `[reel_video]`
+shortcode (it takes `id` and `title` attributes) or the **Reel: Featured video**
+block into any product content. Both render the current product's video in the
+same 16:9 frame.
+
+Source and issue tracker: https://github.com/wppoland/reel — the plugin is
+developed in the open, so bug reports and pull requests are welcome there.
 
 = Features =
 
@@ -50,11 +56,11 @@ renders the current product's video, with the same reserved-space, no-CLS frame.
 * Skip hover zoom on touch devices (where hover is unreliable).
 * Custom accessible label for the open-in-lightbox control.
 * Default video heading and optional intro paragraph.
-* Reserved-space markup throughout — no Cumulative Layout Shift.
-* No jQuery; a single deferred, in-footer script loaded only on product pages.
-* Global on/off toggles per feature.
+* Reserved-space markup throughout, so no Cumulative Layout Shift.
+* No jQuery; one deferred, in-footer script loaded only on product pages.
+* Independent on/off toggle for each feature.
 * "Settings" link on the plugins list; clean uninstall removes plugin options.
-* Translation-ready (bundled .pot).
+* Translation-ready: bundled .pot template plus a Polish (pl_PL) translation.
 * HPOS and cart/checkout blocks compatible.
 
 == Installation ==
@@ -77,8 +83,8 @@ player. Any oEmbed-supported URL (YouTube, Vimeo, etc.) is embedded automaticall
 
 = Does it use jQuery? =
 
-No. Reel ships a single small vanilla-JavaScript file, deferred and loaded in the
-footer, only on the single product page.
+No. Reel ships one vanilla-JavaScript file, deferred and loaded in the footer,
+and only on the single product page.
 
 = Will it cause layout shift (CLS)? =
 
@@ -104,7 +110,7 @@ reserves its space before loading.
 * Add lightbox caption (from image alt text) and an option to skip hover zoom on touch devices.
 * Add settings for the open-in-lightbox label, a default video heading and an optional intro paragraph.
 * Add a "Settings" link on the plugins list and an uninstall routine that removes plugin options.
-* Bundle a translations template (languages/reel.pot) and load the text domain.
+* Bundle a translation template (languages/reel.pot) and a Polish translation.
 
 = 0.1.0 =
 * Initial release: gallery hover zoom, accessible lightbox and featured product video.
