@@ -1,5 +1,5 @@
 === Reel - Gallery and Video for WooCommerce ===
-Contributors: wppoland
+Contributors: motylanogha
 Tags: woocommerce, product gallery, product video, image zoom, gallery slider
 Requires at least: 6.5
 Tested up to: 7.0
