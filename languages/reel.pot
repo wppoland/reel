@@ -26,7 +26,7 @@ msgstr ""
 
 #. Description of the plugin
 #: reel.php
-msgid "Hover zoom, lightbox and featured video for the WooCommerce product gallery — reserved space, no jQuery"
+msgid "Hover zoom, lightbox and featured video for the WooCommerce product gallery, reserved space, no jQuery"
 msgstr ""
 
 #. Author of the plugin
@@ -60,7 +60,7 @@ msgid "Reel"
 msgstr ""
 
 #: src/Admin/Settings.php:142
-msgid "Hover zoom, an accessible lightbox and a featured product video for your WooCommerce gallery — tuned for speed, with no layout shift and no jQuery."
+msgid "Hover zoom, an accessible lightbox and a featured product video for your WooCommerce gallery, tuned for speed, with no layout shift and no jQuery."
 msgstr ""
 
 #: src/Admin/Settings.php:145
@@ -88,7 +88,7 @@ msgid "Hover zoom"
 msgstr ""
 
 #: src/Admin/Settings.php:168
-msgid "When a shopper hovers a gallery image, it magnifies in place to reveal detail — great for textures, labels and fine print. The zoom stays inside the image frame, so nothing on the page moves."
+msgid "When a shopper hovers a gallery image, it magnifies in place to reveal detail, great for textures, labels and fine print. The zoom stays inside the image frame, so nothing on the page moves."
 msgstr ""
 
 #: src/Admin/Settings.php:171
@@ -215,7 +215,7 @@ msgid "Autoplay"
 msgstr ""
 
 #: src/Admin/Settings.php:287
-msgid "Start the video automatically on page load. Browsers only allow this when the video is muted, so sound stays off until the shopper turns it on. Use sparingly — it can be distracting."
+msgid "Start the video automatically on page load. Browsers only allow this when the video is muted, so sound stays off until the shopper turns it on. Use sparingly, it can be distracting."
 msgstr ""
 
 #: src/Admin/Settings.php:290

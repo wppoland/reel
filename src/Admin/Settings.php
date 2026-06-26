@@ -139,7 +139,7 @@ final class Settings implements HasHooks
                 </span>
                 <div class="reel-admin__hero-text">
                     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-                    <p><?php esc_html_e('Hover zoom, an accessible lightbox and a featured product video for your WooCommerce gallery — tuned for speed, with no layout shift and no jQuery.', 'reel'); ?></p>
+                    <p><?php esc_html_e('Hover zoom, an accessible lightbox and a featured product video for your WooCommerce gallery, tuned for speed, with no layout shift and no jQuery.', 'reel'); ?></p>
                 </div>
                 <div class="reel-admin__hero-badges">
                     <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('No CLS', 'reel'); ?></span>
@@ -165,7 +165,7 @@ final class Settings implements HasHooks
                             <div class="reel-field">
                                 <span class="reel-field__label">
                                     <?php esc_html_e('Hover zoom', 'reel'); ?>
-                                    <?php echo wp_kses($this->help(__('When a shopper hovers a gallery image, it magnifies in place to reveal detail — great for textures, labels and fine print. The zoom stays inside the image frame, so nothing on the page moves.', 'reel'), 'reel-help-zoom'), $help_kses); ?>
+                                    <?php echo wp_kses($this->help(__('When a shopper hovers a gallery image, it magnifies in place to reveal detail, great for textures, labels and fine print. The zoom stays inside the image frame, so nothing on the page moves.', 'reel'), 'reel-help-zoom'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
                                     <?php $this->toggle('enable_zoom', (bool) $s['enable_zoom'], __('Magnify the image on hover', 'reel')); ?>
@@ -284,7 +284,7 @@ final class Settings implements HasHooks
                             <div class="reel-field">
                                 <span class="reel-field__label">
                                     <?php esc_html_e('Autoplay', 'reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Start the video automatically on page load. Browsers only allow this when the video is muted, so sound stays off until the shopper turns it on. Use sparingly — it can be distracting.', 'reel'), 'reel-help-autoplay'), $help_kses); ?>
+                                    <?php echo wp_kses($this->help(__('Start the video automatically on page load. Browsers only allow this when the video is muted, so sound stays off until the shopper turns it on. Use sparingly, it can be distracting.', 'reel'), 'reel-help-autoplay'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
                                     <?php $this->toggle('video_autoplay', (bool) $s['video_autoplay'], __('Play automatically (muted)', 'reel')); ?>

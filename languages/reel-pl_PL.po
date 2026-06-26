@@ -31,10 +31,10 @@ msgstr "https://plogins.com/reel/"
 #: reel.php
 msgid ""
 "Hover zoom, lightbox and featured video for the WooCommerce product gallery "
-"— reserved space, no jQuery"
+", reserved space, no jQuery"
 msgstr ""
 "Powiększenie po najechaniu, lightbox i wyróżnione wideo dla galerii "
-"produktów WooCommerce — zarezerwowana przestrzeń, bez jQuery"
+"produktów WooCommerce, zarezerwowana przestrzeń, bez jQuery"
 
 #. Author of the plugin
 #: reel.php
@@ -69,10 +69,10 @@ msgstr "Reel"
 #: src/Admin/Settings.php:142
 msgid ""
 "Hover zoom, an accessible lightbox and a featured product video for your "
-"WooCommerce gallery — tuned for speed, with no layout shift and no jQuery."
+"WooCommerce gallery, tuned for speed, with no layout shift and no jQuery."
 msgstr ""
 "Powiększenie po najechaniu, dostępny lightbox i wyróżnione wideo produktu "
-"dla Twojej galerii WooCommerce — dopracowane pod kątem szybkości, bez "
+"dla Twojej galerii WooCommerce, dopracowane pod kątem szybkości, bez "
 "przesunięć układu i bez jQuery."
 
 #: src/Admin/Settings.php:145
@@ -106,11 +106,11 @@ msgstr "Powiększenie po najechaniu"
 #: src/Admin/Settings.php:168
 msgid ""
 "When a shopper hovers a gallery image, it magnifies in place to reveal "
-"detail — great for textures, labels and fine print. The zoom stays inside "
+"detail, great for textures, labels and fine print. The zoom stays inside "
 "the image frame, so nothing on the page moves."
 msgstr ""
 "Gdy klient najedzie na zdjęcie z galerii, powiększa się ono w miejscu, "
-"ujawniając szczegóły — świetne dla tekstur, etykiet i drobnego druku. "
+"ujawniając szczegóły, świetne dla tekstur, etykiet i drobnego druku. "
 "Powiększenie pozostaje w ramce zdjęcia, więc nic na stronie się nie przesuwa."
 
 #: src/Admin/Settings.php:171
@@ -287,11 +287,11 @@ msgstr "Automatyczne odtwarzanie"
 msgid ""
 "Start the video automatically on page load. Browsers only allow this when "
 "the video is muted, so sound stays off until the shopper turns it on. Use "
-"sparingly — it can be distracting."
+"sparingly, it can be distracting."
 msgstr ""
 "Uruchamiaj wideo automatycznie po wczytaniu strony. Przeglądarki pozwalają "
 "na to tylko, gdy wideo jest wyciszone, więc dźwięk pozostaje wyłączony, "
-"dopóki klient go nie włączy. Używaj oszczędnie — może rozpraszać."
+"dopóki klient go nie włączy. Używaj oszczędnie, może rozpraszać."
 
 #: src/Admin/Settings.php:290
 msgid "Play automatically (muted)"
