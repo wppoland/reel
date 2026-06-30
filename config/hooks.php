@@ -13,9 +13,9 @@
 
 declare(strict_types=1);
 
-use Reel\Admin\Settings;
-use Reel\Frontend\VideoShortcode;
-use Reel\Service\ReelService;
+use Plogins\Reel\Admin\Settings;
+use Plogins\Reel\Frontend\VideoShortcode;
+use Plogins\Reel\Service\ReelService;
 
 defined('ABSPATH') || exit;
 

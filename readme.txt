@@ -1,10 +1,10 @@
-=== Reel - Gallery and Video for WooCommerce ===
+=== Plogins Reel for WooCommerce ===
 Contributors: motylanogha
 Tags: woocommerce, product gallery, product video, image zoom, gallery slider
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,16 +43,15 @@ shortcode (it takes `id` and `title` attributes) or the **Reel: Featured video**
 block into any product content. Both render the current product's video in the
 same 16:9 frame.
 
-Source and issue tracker: https://github.com/wppoland/reel, the plugin is
+Source and issue tracker: https://github.com/wppoland/plogins-reel, the plugin is
 developed in the open, so bug reports and pull requests are welcome there.
 
 = Documentation and links =
 
 * **Documentation** - https://plogins.com/reel/docs/
 * **Plugin page** - https://plogins.com/reel/
-* **Source code** - https://github.com/wppoland/reel
-* **Bug reports and feature requests** - https://github.com/wppoland/reel/issues
-* **Discussions and questions** - https://github.com/wppoland/reel/discussions
+* **Source code** - https://github.com/wppoland/plogins-reel
+* **Bug reports and feature requests** - https://github.com/wppoland/plogins-reel/issues
 
 
 = Features =
@@ -74,7 +73,7 @@ developed in the open, so bug reports and pull requests are welcome there.
 
 == Installation ==
 
-1. Upload the plugin to `/wp-content/plugins/reel`, or install via Plugins → Add New.
+1. Upload the plugin to `/wp-content/plugins/plogins-reel`, or install via Plugins → Add New.
 2. Activate it. WooCommerce must be active.
 3. Go to the **Reel** menu and enable the features you want.
 4. For a product video, set the video URL in the product's `_reel_video_url` meta.
@@ -127,6 +126,9 @@ Reel makes no API calls or analytics requests of its own; the zoom, lightbox and
 The one exception is when you set a product's video URL to a YouTube, Vimeo or other oEmbed link. In that case WordPress core's own `wp_oembed_get()` fetches the embed markup from that provider, sending the video URL to the provider you chose so it can return the player; Reel caches the result in a transient to avoid repeat requests. No request is made for self-hosted (MP4/WebM) videos. Use of those providers is governed by their own terms and privacy policies, e.g. YouTube (https://www.youtube.com/t/terms, https://policies.google.com/privacy) and Vimeo (https://vimeo.com/terms, https://vimeo.com/privacy).
 
 == Changelog ==
+
+= 0.2.1 =
+* Renamed to Plogins Reel for WooCommerce for a more distinctive plugin name.
 
 = 0.2.0 =
 * Redesigned settings screen: card layout, toggle switches, inline help tooltips and a live zoom-strength control.

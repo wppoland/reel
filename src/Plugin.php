@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Reel;
+namespace Plogins\Reel;
 
-use Reel\Contract\HasHooks;
+use Plogins\Reel\Contract\HasHooks;
 
 defined('ABSPATH') || exit;
 

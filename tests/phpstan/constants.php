@@ -19,11 +19,11 @@ namespace {
     }
 }
 
-namespace Reel {
-    if (! defined('Reel\\VERSION')) {
-        define('Reel\\VERSION', '0.1.0');
+namespace Plogins\Reel {
+    if (! defined('Plogins\\Reel\\VERSION')) {
+        define('Plogins\\Reel\\VERSION', '0.1.0');
     }
-    if (! defined('Reel\\PLUGIN_FILE')) {
-        define('Reel\\PLUGIN_FILE', '/tmp/reel/reel.php');
+    if (! defined('Plogins\\Reel\\PLUGIN_FILE')) {
+        define('Plogins\\Reel\\PLUGIN_FILE', '/tmp/reel/reel.php');
     }
 }

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Reel;
+namespace Plogins\Reel;
 
 defined('ABSPATH') || exit;
 
@@ -21,7 +21,7 @@ if (is_readable($reel_composer)) {
 
 spl_autoload_register(static function (string $class): void {
     $prefixes = [
-        'Reel\\'           => __DIR__ . '/src/',
+        'Plogins\\Reel\\'           => __DIR__ . '/src/',
         'WPPoland\\StorefrontKit\\'    => __DIR__ . '/vendor/wppoland/storefront-kit/src/',
     ];
 

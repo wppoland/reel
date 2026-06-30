@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name:       Reel - Gallery and Video for WooCommerce
- * Plugin URI:        https://plogins.com/reel/
+ * Plugin Name:       Plogins Reel for WooCommerce
+ * Plugin URI:        https://plogins.com/plogins-reel/
  * Description:        Hover zoom, lightbox and featured video for the WooCommerce product gallery — reserved space, no jQuery
- * Version:           0.2.0
+ * Version:           0.2.1
  * Requires at least: 6.5
  * Requires PHP:      8.1
  * Requires Plugins:  woocommerce
@@ -11,7 +11,7 @@
  * Author URI:        https://wppoland.com
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       reel
+ * Text Domain:       plogins-reel
  * Domain Path:       /languages
  * WC requires at least: 8.0
  *
@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Reel;
+namespace Plogins\Reel;
 
 defined('ABSPATH') || exit;
 
-const VERSION     = '0.2.0';
+const VERSION     = '0.2.1';
 const PLUGIN_FILE = __FILE__;
 
 define('REEL_DIR', plugin_dir_path(__FILE__));
@@ -34,14 +34,14 @@ require_once __DIR__ . '/autoload.php';
 
 // Translations: WordPress.org auto-loads them from the plugin slug since WP 4.6,
 // so no load_plugin_textdomain() call is needed. Domain Path (/languages) and
-// the bundled languages/reel.pot template support translators and self-hosting.
+// the bundled languages/plogins-reel.pot template support translators and self-hosting.
 
 // Add a "Settings" link on the plugins list row.
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), static function (array $links): array {
     $settings = sprintf(
         '<a href="%s">%s</a>',
         esc_url(admin_url('admin.php?page=reel-settings')),
-        esc_html__('Settings', 'reel'),
+        esc_html__('Settings', 'plogins-reel'),
     );
 
     array_unshift($links, $settings);
@@ -61,7 +61,7 @@ add_action('plugins_loaded', static function (): void {
     if (! class_exists('WooCommerce')) {
         add_action('admin_notices', static function (): void {
             echo '<div class="notice notice-error"><p>';
-            echo esc_html__('Reel requires WooCommerce to be active.', 'reel');
+            echo esc_html__('Reel requires WooCommerce to be active.', 'plogins-reel');
             echo '</p></div>';
         });
         return;

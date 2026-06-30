@@ -1,5 +1,5 @@
 {
-    "name": "wppoland/reel",
+    "name": "wppoland/plogins-reel",
     "description": "Hover zoom, lightbox and featured video for the WooCommerce product gallery — reserved space, no jQuery",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Reel\\": "src/"
+            "Plogins\\Reel\\": "src/"
         }
     },
     "scripts": {
