@@ -19,14 +19,14 @@ defined('ABSPATH') || exit;
     hidden
     role="dialog"
     aria-modal="true"
-    aria-label="<?php esc_attr_e('Product image viewer', 'plogins-reel'); ?>"
+    aria-label="<?php esc_attr_e('Product image viewer', 'reel'); ?>"
     tabindex="-1"
 >
     <button
         type="button"
         class="reel-gallery-lightbox__close"
         data-reel-gallery-lightbox-close
-        aria-label="<?php esc_attr_e('Close image viewer', 'plogins-reel'); ?>"
+        aria-label="<?php esc_attr_e('Close image viewer', 'reel'); ?>"
     ><span aria-hidden="true">&times;</span></button>
     <img data-reel-gallery-lightbox-image src="" alt="" />
     <?php if (! empty($settings['lightbox_caption'])) : ?>

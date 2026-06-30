@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Plogins\Reel\Admin;
+namespace Reel\Admin;
 
 defined('ABSPATH') || exit;
 
-use Plogins\Reel\Contract\HasHooks;
+use Reel\Contract\HasHooks;
 
 /**
  * Admin settings page registered as a top-level "Reel" menu.
@@ -41,14 +41,14 @@ final class Settings implements HasHooks
             'reel-admin',
             REEL_URL . 'assets/css/admin.css',
             [],
-            \Plogins\Reel\VERSION,
+            \Reel\VERSION,
         );
 
         wp_enqueue_script(
             'reel-admin',
             REEL_URL . 'assets/js/admin.js',
             [],
-            \Plogins\Reel\VERSION,
+            \Reel\VERSION,
             ['strategy' => 'defer', 'in_footer' => true],
         );
     }
@@ -66,15 +66,15 @@ final class Settings implements HasHooks
             '<span class="reel-help"><button type="button" class="reel-help__btn" aria-describedby="%1$s" aria-label="%3$s">?</button><span class="reel-help__bubble" id="%1$s" role="tooltip">%2$s</span></span>',
             esc_attr($id),
             esc_html($text),
-            esc_attr__('More information', 'plogins-reel'),
+            esc_attr__('More information', 'reel'),
         );
     }
 
     public function addMenuPage(): void
     {
         add_menu_page(
-            __('Reel Settings', 'plogins-reel'),
-            __('Reel', 'plogins-reel'),
+            __('Reel Settings', 'reel'),
+            __('Reel', 'reel'),
             'manage_woocommerce',
             self::PAGE,
             [$this, 'renderPage'],
@@ -139,12 +139,12 @@ final class Settings implements HasHooks
                 </span>
                 <div class="reel-admin__hero-text">
                     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-                    <p><?php esc_html_e('Hover zoom, an accessible lightbox and a featured product video for your WooCommerce gallery, tuned for speed, with no layout shift and no jQuery.', 'plogins-reel'); ?></p>
+                    <p><?php esc_html_e('Hover zoom, an accessible lightbox and a featured product video for your WooCommerce gallery, tuned for speed, with no layout shift and no jQuery.', 'reel'); ?></p>
                 </div>
                 <div class="reel-admin__hero-badges">
-                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('No CLS', 'plogins-reel'); ?></span>
-                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('No jQuery', 'plogins-reel'); ?></span>
-                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('Accessible', 'plogins-reel'); ?></span>
+                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('No CLS', 'reel'); ?></span>
+                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('No jQuery', 'reel'); ?></span>
+                    <span class="reel-admin__badge"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('Accessible', 'reel'); ?></span>
                 </div>
             </div>
 
@@ -156,84 +156,84 @@ final class Settings implements HasHooks
                         <div class="reel-admin__card-head">
                             <span class="dashicons dashicons-search" aria-hidden="true"></span>
                             <div>
-                                <h2><?php esc_html_e('Gallery zoom & lightbox', 'plogins-reel'); ?></h2>
-                                <p><?php esc_html_e('How shoppers explore your product images: magnify on hover and open them full-screen.', 'plogins-reel'); ?></p>
+                                <h2><?php esc_html_e('Gallery zoom & lightbox', 'reel'); ?></h2>
+                                <p><?php esc_html_e('How shoppers explore your product images: magnify on hover and open them full-screen.', 'reel'); ?></p>
                             </div>
                         </div>
                         <div class="reel-admin__card-body">
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Hover zoom', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('When a shopper hovers a gallery image, it magnifies in place to reveal detail, great for textures, labels and fine print. The zoom stays inside the image frame, so nothing on the page moves.', 'plogins-reel'), 'reel-help-zoom'), $help_kses); ?>
+                                    <?php esc_html_e('Hover zoom', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('When a shopper hovers a gallery image, it magnifies in place to reveal detail, great for textures, labels and fine print. The zoom stays inside the image frame, so nothing on the page moves.', 'reel'), 'reel-help-zoom'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('enable_zoom', (bool) $s['enable_zoom'], __('Magnify the image on hover', 'plogins-reel')); ?>
+                                    <?php $this->toggle('enable_zoom', (bool) $s['enable_zoom'], __('Magnify the image on hover', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <label for="reel-zoom-scale"><?php esc_html_e('Zoom strength', 'plogins-reel'); ?></label>
-                                    <?php echo wp_kses($this->help(__('How much the image grows on hover. 1.2× is subtle; 2× is dramatic. Around 1.4–1.6× reads well for most stores.', 'plogins-reel'), 'reel-help-scale'), $help_kses); ?>
+                                    <label for="reel-zoom-scale"><?php esc_html_e('Zoom strength', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('How much the image grows on hover. 1.2× is subtle; 2× is dramatic. Around 1.4–1.6× reads well for most stores.', 'reel'), 'reel-help-scale'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control reel-admin__range">
                                     <input type="range" min="1" max="3" step="0.05" value="<?php echo esc_attr((string) $s['zoom_scale']); ?>" data-reel-zoom-range aria-hidden="true" tabindex="-1" />
                                     <input type="number" id="reel-zoom-scale" min="1" max="3" step="0.05" class="small-text" name="<?php echo esc_attr($o); ?>[zoom_scale]" value="<?php echo esc_attr((string) $s['zoom_scale']); ?>" data-reel-zoom-number />
                                     <output data-reel-zoom-output aria-hidden="true"></output>
                                 </div>
-                                <p class="reel-field__hint"><?php esc_html_e('Magnification factor on hover, from 1.0× (off) to 3.0×.', 'plogins-reel'); ?></p>
+                                <p class="reel-field__hint"><?php esc_html_e('Magnification factor on hover, from 1.0× (off) to 3.0×.', 'reel'); ?></p>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Disable zoom on touch', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Phones and tablets have no real hover, so the zoom can feel unpredictable. Keep this on to skip it on touch devices and rely on the lightbox there instead.', 'plogins-reel'), 'reel-help-touch'), $help_kses); ?>
+                                    <?php esc_html_e('Disable zoom on touch', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Phones and tablets have no real hover, so the zoom can feel unpredictable. Keep this on to skip it on touch devices and rely on the lightbox there instead.', 'reel'), 'reel-help-touch'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('disable_zoom_on_touch', (bool) $s['disable_zoom_on_touch'], __('Skip hover zoom on touch devices', 'plogins-reel')); ?>
+                                    <?php $this->toggle('disable_zoom_on_touch', (bool) $s['disable_zoom_on_touch'], __('Skip hover zoom on touch devices', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Lightbox', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Clicking a gallery image opens it full-screen over a dimmed backdrop. Fully keyboard-operable: open with Enter/Space, close with Escape, and focus returns to where it was.', 'plogins-reel'), 'reel-help-lightbox'), $help_kses); ?>
+                                    <?php esc_html_e('Lightbox', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Clicking a gallery image opens it full-screen over a dimmed backdrop. Fully keyboard-operable: open with Enter/Space, close with Escape, and focus returns to where it was.', 'reel'), 'reel-help-lightbox'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('enable_lightbox', (bool) $s['enable_lightbox'], __('Open images full-screen on click', 'plogins-reel')); ?>
+                                    <?php $this->toggle('enable_lightbox', (bool) $s['enable_lightbox'], __('Open images full-screen on click', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Close on backdrop click', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Let shoppers dismiss the lightbox by clicking the dark area around the image, in addition to the close button and Escape key.', 'plogins-reel'), 'reel-help-backdrop'), $help_kses); ?>
+                                    <?php esc_html_e('Close on backdrop click', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Let shoppers dismiss the lightbox by clicking the dark area around the image, in addition to the close button and Escape key.', 'reel'), 'reel-help-backdrop'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('show_backdrop_close', (bool) $s['show_backdrop_close'], __('Click outside the image to close', 'plogins-reel')); ?>
+                                    <?php $this->toggle('show_backdrop_close', (bool) $s['show_backdrop_close'], __('Click outside the image to close', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Image caption', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Show each image\'s alt text as a caption inside the lightbox. Helpful when your images have descriptive alt text; leave off if they don\'t.', 'plogins-reel'), 'reel-help-caption'), $help_kses); ?>
+                                    <?php esc_html_e('Image caption', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Show each image\'s alt text as a caption inside the lightbox. Helpful when your images have descriptive alt text; leave off if they don\'t.', 'reel'), 'reel-help-caption'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('lightbox_caption', (bool) $s['lightbox_caption'], __('Show the image alt text as a caption', 'plogins-reel')); ?>
+                                    <?php $this->toggle('lightbox_caption', (bool) $s['lightbox_caption'], __('Show the image alt text as a caption', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <label for="reel-trigger-label"><?php esc_html_e('Open-image label', 'plogins-reel'); ?></label>
-                                    <?php echo wp_kses($this->help(__('The accessible label screen readers announce for each gallery image, e.g. "Open image in full screen". Leave empty to use the built-in default.', 'plogins-reel'), 'reel-help-trigger'), $help_kses); ?>
+                                    <label for="reel-trigger-label"><?php esc_html_e('Open-image label', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('The accessible label screen readers announce for each gallery image, e.g. "Open image in full screen". Leave empty to use the built-in default.', 'reel'), 'reel-help-trigger'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <input type="text" id="reel-trigger-label" class="regular-text" name="<?php echo esc_attr($o); ?>[trigger_label]" value="<?php echo esc_attr((string) $s['trigger_label']); ?>" placeholder="<?php esc_attr_e('Open image in full screen', 'plogins-reel'); ?>" />
+                                    <input type="text" id="reel-trigger-label" class="regular-text" name="<?php echo esc_attr($o); ?>[trigger_label]" value="<?php echo esc_attr((string) $s['trigger_label']); ?>" placeholder="<?php esc_attr_e('Open image in full screen', 'reel'); ?>" />
                                 </div>
-                                <p class="reel-field__hint"><?php esc_html_e('Accessible label for the open-in-lightbox control. Leave empty for the default.', 'plogins-reel'); ?></p>
+                                <p class="reel-field__hint"><?php esc_html_e('Accessible label for the open-in-lightbox control. Leave empty for the default.', 'reel'); ?></p>
                             </div>
 
                         </div>
@@ -243,12 +243,12 @@ final class Settings implements HasHooks
                         <div class="reel-admin__card-head">
                             <span class="dashicons dashicons-format-video" aria-hidden="true"></span>
                             <div>
-                                <h2><?php esc_html_e('Featured video', 'plogins-reel'); ?></h2>
+                                <h2><?php esc_html_e('Featured video', 'reel'); ?></h2>
                                 <p>
                                     <?php
                                     $reel_meta = sprintf(
                                         /* translators: %s: the product meta field name. */
-                                        __('Add a video to any product by setting its %s meta field to a self-hosted MP4/WebM file or a YouTube/Vimeo link.', 'plogins-reel'),
+                                        __('Add a video to any product by setting its %s meta field to a self-hosted MP4/WebM file or a YouTube/Vimeo link.', 'reel'),
                                         '<code class="reel-admin__code">_reel_video_url</code>',
                                     );
                                     echo wp_kses($reel_meta, ['code' => ['class' => true]]);
@@ -260,64 +260,64 @@ final class Settings implements HasHooks
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Show featured video', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Master switch for the product video. When on, products that have a video URL show it on their single product page in the position you choose below.', 'plogins-reel'), 'reel-help-video'), $help_kses); ?>
+                                    <?php esc_html_e('Show featured video', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Master switch for the product video. When on, products that have a video URL show it on their single product page in the position you choose below.', 'reel'), 'reel-help-video'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('enable_video', (bool) $s['enable_video'], __('Display the product video on the product page', 'plogins-reel')); ?>
+                                    <?php $this->toggle('enable_video', (bool) $s['enable_video'], __('Display the product video on the product page', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <label for="reel-video-position"><?php esc_html_e('Position', 'plogins-reel'); ?></label>
-                                    <?php echo wp_kses($this->help(__('Where the video appears: directly under the image gallery, or above the title/price summary column. Pick whichever fits your theme best.', 'plogins-reel'), 'reel-help-position'), $help_kses); ?>
+                                    <label for="reel-video-position"><?php esc_html_e('Position', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('Where the video appears: directly under the image gallery, or above the title/price summary column. Pick whichever fits your theme best.', 'reel'), 'reel-help-position'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
                                     <select id="reel-video-position" name="<?php echo esc_attr($o); ?>[video_position]">
-                                        <option value="after_gallery" <?php selected((string) $s['video_position'], 'after_gallery'); ?>><?php esc_html_e('After the gallery', 'plogins-reel'); ?></option>
-                                        <option value="before_summary" <?php selected((string) $s['video_position'], 'before_summary'); ?>><?php esc_html_e('Before the summary', 'plogins-reel'); ?></option>
+                                        <option value="after_gallery" <?php selected((string) $s['video_position'], 'after_gallery'); ?>><?php esc_html_e('After the gallery', 'reel'); ?></option>
+                                        <option value="before_summary" <?php selected((string) $s['video_position'], 'before_summary'); ?>><?php esc_html_e('Before the summary', 'reel'); ?></option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Autoplay', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Start the video automatically on page load. Browsers only allow this when the video is muted, so sound stays off until the shopper turns it on. Use sparingly, it can be distracting.', 'plogins-reel'), 'reel-help-autoplay'), $help_kses); ?>
+                                    <?php esc_html_e('Autoplay', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Start the video automatically on page load. Browsers only allow this when the video is muted, so sound stays off until the shopper turns it on. Use sparingly, it can be distracting.', 'reel'), 'reel-help-autoplay'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('video_autoplay', (bool) $s['video_autoplay'], __('Play automatically (muted)', 'plogins-reel')); ?>
+                                    <?php $this->toggle('video_autoplay', (bool) $s['video_autoplay'], __('Play automatically (muted)', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <?php esc_html_e('Show heading', 'plogins-reel'); ?>
-                                    <?php echo wp_kses($this->help(__('Display a heading above the video. Turn off for a cleaner, heading-free embed.', 'plogins-reel'), 'reel-help-showtitle'), $help_kses); ?>
+                                    <?php esc_html_e('Show heading', 'reel'); ?>
+                                    <?php echo wp_kses($this->help(__('Display a heading above the video. Turn off for a cleaner, heading-free embed.', 'reel'), 'reel-help-showtitle'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <?php $this->toggle('video_show_title', (bool) $s['video_show_title'], __('Show a heading above the video', 'plogins-reel')); ?>
+                                    <?php $this->toggle('video_show_title', (bool) $s['video_show_title'], __('Show a heading above the video', 'reel')); ?>
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <label for="reel-video-title"><?php esc_html_e('Default heading', 'plogins-reel'); ?></label>
-                                    <?php echo wp_kses($this->help(__('The heading used when a product has no video heading of its own. Leave empty to use the built-in "Product video" text.', 'plogins-reel'), 'reel-help-deftitle'), $help_kses); ?>
+                                    <label for="reel-video-title"><?php esc_html_e('Default heading', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('The heading used when a product has no video heading of its own. Leave empty to use the built-in "Product video" text.', 'reel'), 'reel-help-deftitle'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <input type="text" id="reel-video-title" class="regular-text" name="<?php echo esc_attr($o); ?>[video_title]" value="<?php echo esc_attr((string) $s['video_title']); ?>" placeholder="<?php esc_attr_e('Product video', 'plogins-reel'); ?>" />
+                                    <input type="text" id="reel-video-title" class="regular-text" name="<?php echo esc_attr($o); ?>[video_title]" value="<?php echo esc_attr((string) $s['video_title']); ?>" placeholder="<?php esc_attr_e('Product video', 'reel'); ?>" />
                                 </div>
                             </div>
 
                             <div class="reel-field">
                                 <span class="reel-field__label">
-                                    <label for="reel-video-intro"><?php esc_html_e('Intro text', 'plogins-reel'); ?></label>
-                                    <?php echo wp_kses($this->help(__('An optional short paragraph shown under the heading, e.g. "See it in action." Leave empty to hide it.', 'plogins-reel'), 'reel-help-intro'), $help_kses); ?>
+                                    <label for="reel-video-intro"><?php esc_html_e('Intro text', 'reel'); ?></label>
+                                    <?php echo wp_kses($this->help(__('An optional short paragraph shown under the heading, e.g. "See it in action." Leave empty to hide it.', 'reel'), 'reel-help-intro'), $help_kses); ?>
                                 </span>
                                 <div class="reel-field__control">
-                                    <textarea id="reel-video-intro" class="large-text" rows="2" name="<?php echo esc_attr($o); ?>[video_intro]" placeholder="<?php esc_attr_e('See this product in action…', 'plogins-reel'); ?>"><?php echo esc_textarea((string) $s['video_intro']); ?></textarea>
+                                    <textarea id="reel-video-intro" class="large-text" rows="2" name="<?php echo esc_attr($o); ?>[video_intro]" placeholder="<?php esc_attr_e('See this product in action…', 'reel'); ?>"><?php echo esc_textarea((string) $s['video_intro']); ?></textarea>
                                 </div>
                             </div>
 
@@ -328,31 +328,31 @@ final class Settings implements HasHooks
                         <div class="reel-admin__card-head">
                             <span class="dashicons dashicons-shortcode" aria-hidden="true"></span>
                             <div>
-                                <h2><?php esc_html_e('Place it anywhere', 'plogins-reel'); ?></h2>
-                                <p><?php esc_html_e('Beyond the automatic gallery position, drop the current product\'s video wherever you like.', 'plogins-reel'); ?></p>
+                                <h2><?php esc_html_e('Place it anywhere', 'reel'); ?></h2>
+                                <p><?php esc_html_e('Beyond the automatic gallery position, drop the current product\'s video wherever you like.', 'reel'); ?></p>
                             </div>
                         </div>
                         <div class="reel-admin__card-body">
                             <div class="reel-field">
-                                <span class="reel-field__label"><?php esc_html_e('Shortcode', 'plogins-reel'); ?></span>
+                                <span class="reel-field__label"><?php esc_html_e('Shortcode', 'reel'); ?></span>
                                 <div class="reel-field__control">
                                     <code class="reel-admin__code">[reel_video]</code>
                                 </div>
-                                <p class="reel-field__hint"><?php esc_html_e('Paste into any product description or page. Optional attributes: id="123" to target a specific product, and title="hide" to drop the heading.', 'plogins-reel'); ?></p>
+                                <p class="reel-field__hint"><?php esc_html_e('Paste into any product description or page. Optional attributes: id="123" to target a specific product, and title="hide" to drop the heading.', 'reel'); ?></p>
                             </div>
                             <div class="reel-field">
-                                <span class="reel-field__label"><?php esc_html_e('Block', 'plogins-reel'); ?></span>
+                                <span class="reel-field__label"><?php esc_html_e('Block', 'reel'); ?></span>
                                 <div class="reel-field__control">
-                                    <code class="reel-admin__code"><?php esc_html_e('Reel: Featured video', 'plogins-reel'); ?></code>
+                                    <code class="reel-admin__code"><?php esc_html_e('Reel: Featured video', 'reel'); ?></code>
                                 </div>
-                                <p class="reel-field__hint"><?php esc_html_e('Search for it in the block inserter. Renders the same video as the shortcode.', 'plogins-reel'); ?></p>
+                                <p class="reel-field__hint"><?php esc_html_e('Search for it in the block inserter. Renders the same video as the shortcode.', 'reel'); ?></p>
                             </div>
                         </div>
                     </section>
                 </div>
 
                 <div class="reel-admin__submit">
-                    <?php submit_button(__('Save changes', 'plogins-reel')); ?>
+                    <?php submit_button(__('Save changes', 'reel')); ?>
                 </div>
             </form>
         </div>

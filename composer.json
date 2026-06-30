@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Plogins\\Reel\\": "src/"
+            "Reel\\": "src/"
         }
     },
     "scripts": {

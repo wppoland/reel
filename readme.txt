@@ -1,10 +1,10 @@
-=== Plogins Reel for WooCommerce ===
+=== Reel - Gallery and Video for WooCommerce ===
 Contributors: motylanogha
 Tags: woocommerce, product gallery, product video, image zoom, gallery slider
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 0.2.1
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,15 +43,16 @@ shortcode (it takes `id` and `title` attributes) or the **Reel: Featured video**
 block into any product content. Both render the current product's video in the
 same 16:9 frame.
 
-Source and issue tracker: https://github.com/wppoland/plogins-reel, the plugin is
+Source and issue tracker: https://github.com/wppoland/reel, the plugin is
 developed in the open, so bug reports and pull requests are welcome there.
 
 = Documentation and links =
 
-* **Documentation** - https://plogins.com/plogins-reel/docs/
-* **Plugin page** - https://plogins.com/plogins-reel/
-* **Source code** - https://github.com/wppoland/plogins-reel
-* **Bug reports and feature requests** - https://github.com/wppoland/plogins-reel/issues
+* **Documentation** - https://plogins.com/reel/docs/
+* **Plugin page** - https://plogins.com/reel/
+* **Source code** - https://github.com/wppoland/reel
+* **Bug reports and feature requests** - https://github.com/wppoland/reel/issues
+* **Discussions and questions** - https://github.com/wppoland/reel/discussions
 
 
 = Features =
@@ -73,7 +74,7 @@ developed in the open, so bug reports and pull requests are welcome there.
 
 == Installation ==
 
-1. Upload the plugin to `/wp-content/plugins/plogins-reel`, or install via Plugins → Add New.
+1. Upload the plugin to `/wp-content/plugins/reel`, or install via Plugins → Add New.
 2. Activate it. WooCommerce must be active.
 3. Go to the **Reel** menu and enable the features you want.
 4. For a product video, set the video URL in the product's `_reel_video_url` meta.
@@ -127,9 +128,6 @@ The one exception is when you set a product's video URL to a YouTube, Vimeo or o
 
 == Changelog ==
 
-= 0.2.1 =
-* Renamed to Plogins Reel for WooCommerce for a more distinctive plugin name.
-
 = 0.2.0 =
 * Redesigned settings screen: card layout, toggle switches, inline help tooltips and a live zoom-strength control.
 * Polished storefront styling: themeable CSS custom properties, fluid sizing, dark-mode support and reduced-motion guards.
@@ -139,7 +137,7 @@ The one exception is when you set a product's video URL to a YouTube, Vimeo or o
 * Add lightbox caption (from image alt text) and an option to skip hover zoom on touch devices.
 * Add settings for the open-in-lightbox label, a default video heading and an optional intro paragraph.
 * Add a "Settings" link on the plugins list and an uninstall routine that removes plugin options.
-* Bundle a translation template (languages/plogins-reel.pot) and a Polish translation.
+* Bundle a translation template (languages/reel.pot) and a Polish translation.
 
 = 0.1.0 =
 * Initial release: gallery hover zoom, accessible lightbox and featured product video.

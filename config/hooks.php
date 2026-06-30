@@ -2,7 +2,7 @@
 /**
  * Boot order: services listed here are resolved from the container and have
  * their registerHooks() called during Plugin::boot(). Each must implement
- * Plogins\Reel\Contract\HasHooks.
+ * Reel\Contract\HasHooks.
  *
  * Admin-only classes are included only when running in wp-admin context.
  *
@@ -13,9 +13,9 @@
 
 declare(strict_types=1);
 
-use Plogins\Reel\Admin\Settings;
-use Plogins\Reel\Frontend\VideoShortcode;
-use Plogins\Reel\Service\ReelService;
+use Reel\Admin\Settings;
+use Reel\Frontend\VideoShortcode;
+use Reel\Service\ReelService;
 
 defined('ABSPATH') || exit;
 

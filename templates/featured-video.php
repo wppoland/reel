@@ -24,7 +24,7 @@ if (! isset($video_html) || $video_html === '') {
 ?>
 <div class="reel-featured-video">
     <?php if (! empty($show_title) && isset($title) && $title !== '') : ?>
-        <p class="reel-featured-video__eyebrow"><?php esc_html_e('Now playing', 'plogins-reel'); ?></p>
+        <p class="reel-featured-video__eyebrow"><?php esc_html_e('Now playing', 'reel'); ?></p>
         <h2 class="reel-featured-video__title"><?php echo esc_html((string) $title); ?></h2>
     <?php endif; ?>
 

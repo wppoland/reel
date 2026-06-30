@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plogins\Reel\Contract;
+namespace Reel\Contract;
 
 defined('ABSPATH') || exit;
 

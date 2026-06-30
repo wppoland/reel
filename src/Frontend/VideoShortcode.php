@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Plogins\Reel\Frontend;
+namespace Reel\Frontend;
 
 defined('ABSPATH') || exit;
 
-use Plogins\Reel\Contract\HasHooks;
-use Plogins\Reel\Service\ReelService;
+use Reel\Contract\HasHooks;
+use Reel\Service\ReelService;
 
 /**
  * Registers the `[reel_video]` shortcode and a matching dynamic block
@@ -67,10 +67,10 @@ final class VideoShortcode implements HasHooks
 
         register_block_type('reel/featured-video', [
             'api_version'     => '3',
-            'title'           => __('Reel: Featured video', 'plogins-reel'),
+            'title'           => __('Reel: Featured video', 'reel'),
             'category'        => 'media',
             'icon'            => 'format-video',
-            'description'     => __('Show the current product\'s featured video (Reel).', 'plogins-reel'),
+            'description'     => __('Show the current product\'s featured video (Reel).', 'reel'),
             'attributes'      => [
                 'productId' => ['type' => 'number', 'default' => 0],
                 'showTitle' => ['type' => 'boolean', 'default' => true],
@@ -115,8 +115,8 @@ final class VideoShortcode implements HasHooks
     {
         return sprintf(
             '<div class="reel-featured-video reel-featured-video--placeholder" style="padding:1.25rem;border:1px dashed currentColor;border-radius:14px;opacity:.7;text-align:center;">%s<br><small>%s</small></div>',
-            esc_html__('Reel: Featured video', 'plogins-reel'),
-            esc_html__('This shows the current product\'s video on the storefront. Set a video URL in the product\'s _reel_video_url meta field, then view the product page.', 'plogins-reel'),
+            esc_html__('Reel: Featured video', 'reel'),
+            esc_html__('This shows the current product\'s video on the storefront. Set a video URL in the product\'s _reel_video_url meta field, then view the product page.', 'reel'),
         );
     }
 
@@ -146,7 +146,7 @@ final class VideoShortcode implements HasHooks
                 'reel-featured-video',
                 REEL_URL . 'assets/css/featured-video.css',
                 [],
-                \Plogins\Reel\VERSION,
+                \Reel\VERSION,
             );
         }
 

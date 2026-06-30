@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Plogins\Reel\Service;
+namespace Reel\Service;
 
-use Plogins\Reel\Contract\HasHooks;
+use Reel\Contract\HasHooks;
 use WPPoland\StorefrontKit\Media\FeaturedVideoEngine;
 use WPPoland\StorefrontKit\Media\GalleryZoomEngine;
 
@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 
 /**
  * Wires {@see GalleryZoomEngine} and {@see FeaturedVideoEngine} with this
- * plugin's text-domain ('plogins-reel'), option prefix ('reel_'), asset URLs and
+ * plugin's text-domain ('reel'), option prefix ('reel_'), asset URLs and
  * product meta keys. This class supplies localisation, option storage, asset
  * URLs and template rendering.
  *
@@ -47,9 +47,9 @@ final class ReelService implements HasHooks
                 'reel-gallery-zoom',
                 REEL_URL . 'assets/css/gallery-zoom.css',
                 REEL_URL . 'assets/js/gallery-zoom.js',
-                \Plogins\Reel\VERSION,
+                \Reel\VERSION,
                 'lightbox',
-                ['trigger' => __('Open image in full screen', 'plogins-reel')],
+                ['trigger' => __('Open image in full screen', 'reel')],
                 fn (): bool => $this->zoomEnabled(),
                 static fn (): bool => function_exists('is_product') && is_product(),
                 fn (): array => $this->zoomSettings(),
@@ -63,10 +63,10 @@ final class ReelService implements HasHooks
             $this->video = new FeaturedVideoEngine(
                 'reel-featured-video',
                 REEL_URL . 'assets/css/featured-video.css',
-                \Plogins\Reel\VERSION,
+                \Reel\VERSION,
                 'featured-video',
                 ['url' => self::META_VIDEO_URL, 'title' => self::META_VIDEO_TITLE],
-                ['title' => __('Product video', 'plogins-reel')],
+                ['title' => __('Product video', 'reel')],
                 fn (): bool => $this->videoEnabled(),
                 static fn (): bool => function_exists('is_product') && is_product(),
                 fn (): array => $this->videoSettings(),
@@ -259,7 +259,7 @@ final class ReelService implements HasHooks
         $settings = $this->settings();
         $default  = trim((string) ($settings['video_title'] ?? ''));
 
-        return $default !== '' ? $default : __('Product video', 'plogins-reel');
+        return $default !== '' ? $default : __('Product video', 'reel');
     }
 
     /**
