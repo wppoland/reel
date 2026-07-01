@@ -112,6 +112,11 @@ reserves its space before loading.
 
 Yes. Shoppers can open images with Enter or Space, close with Escape, and focus returns to the image that opened the lightbox.
 
+
+= Does this plugin work on WordPress Multisite? =
+
+Yes. This plugin is compatible with WordPress Multisite. Network activate it or activate it on individual sites; each site keeps its own settings and data.
+
 == Screenshots ==
 
 1. Gallery hover zoom on a single product page.
